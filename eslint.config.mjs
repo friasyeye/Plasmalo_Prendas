@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Ignore agent worktrees from parallel builds:
+    ".claude/worktrees/**",
   ]),
 ]);
 
