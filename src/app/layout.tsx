@@ -1,21 +1,24 @@
 import type { Metadata } from "next";
-import { Public_Sans } from "next/font/google";
-import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { Bebas_Neue, Spline_Sans } from "next/font/google";
 import "./globals.css";
 
-const publicSans = Public_Sans({
-  variable: "--font-public-sans",
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+  weight: ["400"],
+});
+
+const splineSans = Spline_Sans({
+  variable: "--font-spline-sans",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
-  title: "Ropa Personalizada para Empresas | Taller en Barcelona",
-  description: "Tu equipo, tu imagen. Ropa corporativa personalizada para empresas que quieren ser reconocidas allí donde vayan. [ Mockup gratuito ] Solo producimos cuando das el visto bueno.",
+  title: "FabFit | Effortless Shopping, Exceptional Choices",
+  description: "FabFit — your destination for jerseys, accessories, and sports gear. Effortless shopping, exceptional choices.",
   icons: {
     icon: "/seo/favicon.png",
-    apple: "/seo/apple-touch-icon.png",
   },
 };
 
@@ -25,11 +28,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={publicSans.variable}>
-      <body className="min-h-full flex flex-col">
-        <Navbar />
-        <div className="flex-1">{children}</div>
-        <Footer />
+    <html lang="en" className={`${bebasNeue.variable} ${splineSans.variable}`}>
+      <body className="min-h-full">
+        {children}
       </body>
     </html>
   );

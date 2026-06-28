@@ -7,8 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-public-sans), "Public Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-spline-sans), "Spline Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bebas-neue), "Bebas Neue", sans-serif;
+  --font-heading: var(--font-display);
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
@@ -26,10 +27,12 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-destructive: var(--destructive);
 
-  /* Refeet brand tokens */
-  --color-refeet-dark: var(--refeet-dark);
-  --color-refeet-muted: var(--refeet-muted);
-  --color-refeet-surface: var(--refeet-surface);
+  /* FabFit brand tokens */
+  --color-ff-orange: var(--ff-orange);
+  --color-ff-sale-red: var(--ff-sale-red);
+  --color-ff-surface: var(--ff-surface);
+  --color-ff-sale-bg: var(--ff-sale-bg);
+  --color-ff-card-bg: var(--ff-card-bg);
 
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
@@ -38,31 +41,33 @@
 }
 
 :root {
-  /* Refeet brand colors */
-  --refeet-dark: rgb(23, 28, 27);      /* Footer background #171C1B */
-  --refeet-muted: rgb(118, 118, 118);  /* Muted text #767676 */
-  --refeet-surface: rgb(246, 247, 247); /* Light section background #F6F7F7 */
+  /* FabFit brand colors */
+  --ff-orange: rgb(251, 126, 36);       /* Orange accent #FB7E24 */
+  --ff-sale-red: rgb(255, 0, 0);        /* Sale price red */
+  --ff-surface: rgb(245, 245, 245);     /* Product card backgrounds */
+  --ff-sale-bg: rgb(228, 228, 228);     /* Sale banner background */
+  --ff-card-bg: rgb(245, 245, 245);     /* Category / product card bg */
 
-  /* shadcn tokens mapped to Refeet palette */
-  --background: oklch(1 0 0);          /* white */
-  --foreground: oklch(0.07 0 0);       /* near-black #111 */
+  /* shadcn tokens */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0 0 0);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.07 0 0);
+  --card-foreground: oklch(0 0 0);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.07 0 0);
-  --primary: oklch(0.07 0 0);          /* black */
-  --primary-foreground: oklch(1 0 0);  /* white */
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.07 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.47 0 0); /* #767676 */
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.07 0 0);
+  --popover-foreground: oklch(0 0 0);
+  --primary: oklch(0 0 0);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0 0);
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.96 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --accent: oklch(0.96 0 0);
+  --accent-foreground: oklch(0 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0 0);            /* light gray border */
+  --border: oklch(0.9 0 0);
   --input: oklch(0.9 0 0);
   --ring: oklch(0.7 0 0);
-  --radius: 0px;                       /* Refeet uses sharp corners */
+  --radius: 0px;
 }
 
 @layer base {
@@ -71,17 +76,32 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-family: var(--font-public-sans), "Public Sans", ui-sans-serif, system-ui, sans-serif;
-    font-size: 14px;
+    font-family: var(--font-spline-sans), "Spline Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   html {
-    font-family: var(--font-public-sans), "Public Sans", ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-spline-sans), "Spline Sans", ui-sans-serif, system-ui, sans-serif;
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: 400;
     line-height: 1.1;
   }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
 }
