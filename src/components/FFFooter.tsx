@@ -11,7 +11,7 @@ export function FFFooter() {
         <div className="flex flex-col gap-4">
           <span
             className="font-bold text-2xl leading-none"
-            style={{ fontFamily: "var(--font-spline-sans, 'Spline Sans', sans-serif)" }}
+            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             <span className="text-black">FABFIT</span>
             <span style={{ color: "rgb(251, 126, 36)" }}>.</span>

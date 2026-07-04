@@ -1,49 +1,55 @@
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
 
 export function FFHero() {
   const headingStyle: React.CSSProperties = {
-    fontFamily: "var(--font-bebas-neue)",
-    fontSize: "clamp(60px, 7.5vw, 108px)",
-    fontWeight: 400,
-    lineHeight: 0.95,
-    color: "black",
+    fontFamily: "var(--font-general-sans)",
+    fontSize: "clamp(28px, 4vw, 56px)",
+    fontWeight: 600,
+    lineHeight: 1.05,
+    letterSpacing: "-0.02em",
+    color: "white",
     margin: 0,
     padding: 0,
   };
 
   return (
-    <section>
-      {/* Part 1 — Text hero */}
-      <div className="w-full bg-white px-8 pt-20 pb-6">
-        {/* Line 1: full width */}
-        <div style={headingStyle}>
-          EFFORTLESS{" "}
-          <span style={{ color: "rgb(251, 126, 36)" }}>SHOPPING</span>{" "}
-          EXCEPTIONAL
-        </div>
-        {/* Line 2: CHOICES + button side by side */}
-        <div className="flex items-center justify-between" style={{ marginTop: "4px" }}>
-          <div style={headingStyle}>CHOICES</div>
-          <button
-            style={{ fontFamily: "var(--font-spline-sans)", fontSize: "16px" }}
-            className="flex items-center gap-2 border border-black bg-transparent text-black px-6 py-3 shrink-0 cursor-pointer hover:bg-black hover:text-white transition-colors"
-          >
-            Shop Now
-            <ArrowUpRight size={18} />
-          </button>
-        </div>
-      </div>
+    <section className="relative w-full min-h-screen overflow-hidden">
+      {/* Imagen de fondo a sección completa */}
+      <Image
+        src="/fabfit/hero-fashion.jpg"
+        alt="Ropa personalizada"
+        fill
+        priority
+        className="object-cover object-center"
+      />
+      {/* Overlay para legibilidad del texto */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/40" />
 
-      {/* Part 2 — Hero image */}
-      <div className="w-full h-[420px] relative overflow-hidden">
-        <Image
-          src="/fabfit/hero-image.png"
-          alt="FabFit fashion"
-          fill
-          priority
-          className="object-cover object-top"
-        />
+      {/* Contenido superpuesto */}
+      <div className="relative z-10 flex min-h-screen flex-col justify-end px-6 md:px-8 pb-40 md:pb-40 pt-32">
+        {/* Heading */}
+        <h1 style={headingStyle}>
+          Ropa personalizada <br className="hidden md:block" />
+          que marca la diferencia
+        </h1>
+        {/* Buttons */}
+        <div style={{ marginTop: "24px" }} className="flex items-start gap-2 md:gap-3">
+          <button
+            style={{ fontFamily: "var(--font-satoshi)" }}
+            className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors"
+          >
+            Elige tu prenda
+          </button>
+          <a
+            href="https://wa.me/?text=Hola,%20me%20gustaría%20solicitar%20un%20mockup%20gratis"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontFamily: "var(--font-satoshi)" }}
+            className="w-fit rounded-full border border-white bg-white text-black px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-transparent hover:text-white transition-colors text-center"
+          >
+            Pide tu mockup gratis
+          </a>
+        </div>
       </div>
     </section>
   );

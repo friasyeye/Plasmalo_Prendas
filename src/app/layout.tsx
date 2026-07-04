@@ -1,22 +1,30 @@
 import type { Metadata } from "next";
-import { Bebas_Neue, Spline_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas-neue",
-  subsets: ["latin"],
-  weight: ["400"],
+const generalSans = localFont({
+  src: [
+    { path: "./fonts/GeneralSans-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/GeneralSans-600.woff2", weight: "600", style: "normal" },
+    { path: "./fonts/GeneralSans-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-general-sans",
+  display: "swap",
 });
 
-const splineSans = Spline_Sans({
-  variable: "--font-spline-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
+const satoshi = localFont({
+  src: [
+    { path: "./fonts/Satoshi-400.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Satoshi-500.woff2", weight: "500", style: "normal" },
+    { path: "./fonts/Satoshi-700.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-satoshi",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "FabFit | Effortless Shopping, Exceptional Choices",
-  description: "FabFit — your destination for jerseys, accessories, and sports gear. Effortless shopping, exceptional choices.",
+  title: "Plásmalo | Ropa Personalizada para Empresas y Eventos",
+  description: "Personaliza ropa y merchandising para tu empresa o evento. DTF, bordado y diseño a medida,   ▷ Sin pedido mínimo. Envíos a toda España.",
   icons: {
     icon: "/seo/favicon.png",
   },
@@ -28,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${bebasNeue.variable} ${splineSans.variable}`}>
+    <html lang="es" className={`${generalSans.variable} ${satoshi.variable}`}>
       <body className="min-h-full">
         {children}
       </body>

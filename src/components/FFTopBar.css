@@ -1,0 +1,37 @@
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Cada grupo debe cubrir como mínimo el viewport para que
+   el desplazamiento de -50% del track sea continuo en todo el ancho */
+.banner-group {
+  min-width: 100%;
+  justify-content: space-around;
+}
+
+.banner-scroll {
+  animation: scroll-left 24s linear infinite;
+  /* Solo transform: se compone en GPU, sin layout ni paint */
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Pause animation on hover para accesibilidad */
+@media (prefers-reduced-motion: no-preference) {
+  .banner-scroll:hover {
+    animation-play-state: paused;
+  }
+}
+
+/* Respetar preferencia del usuario para reducir movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .banner-scroll {
+    animation: none;
+    transform: translateX(0);
+  }
+}
