@@ -2,13 +2,13 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 
 const categories = [
-  { name: "Jerseys", img: "/fabfit/category-jerseys.png" },
-  { name: "Accessories", img: "/fabfit/category-accessories.png" },
-  { name: "Sports", img: "/fabfit/category-sports.png" },
-  { name: "Outerwear", img: "/fabfit/product-grey-comfort.png" },
+  { name: "Camiseta", img: "/fabfit/category-jerseys.png" },
+  { name: "Sudadera", img: "/fabfit/category-accessories.png" },
+  { name: "Polo", img: "/fabfit/category-sports.png" },
+  { name: "Gorra", img: "/fabfit/product-grey-comfort.png" },
 ];
 
-export function FFCategories() {
+export function Categories() {
   return (
     <section className="bg-white px-8 py-16">
       <h2

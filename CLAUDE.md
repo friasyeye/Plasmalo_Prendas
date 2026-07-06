@@ -2,14 +2,14 @@
 
 ## Punto de partida
 
-Este proyecto es un **clon visual** de Refeet (marca de zapatillas sostenibles). El objetivo fue capturar fielmente el diseño, layout y estética del original. Eso está conseguido.
+Este proyecto nació como **clon visual** de dos templates distintos (Refeet para `/about` y `/shop`, FabFit para la Home). El objetivo era capturar diseño y layout, no contenido real.
 
-Lo que **NO está hecho** (y es esperado en esta fase):
-- Los datos son todos hardcodeados (productos, equipo, testimonials, timeline)
-- Muchas rutas del Navbar y Footer apuntan a `#` o a páginas que no existen aún
-- Los filtros del shop tienen UI pero no filtran nada
-- El formulario de newsletter no envía nada
-- Hay inline styles en lugar de clases Tailwind en varios componentes
+**`/about` y `/shop` fueron eliminadas** (2026-07-06): eran páginas huérfanas sin Navbar ni Footer propios, con contenido 100% del template original en inglés (Refeet, "zapatillas sostenibles"), sin ninguna relación con Plásmalo. Se limpiaron también sus 11 componentes exclusivos, sus assets en `/public/images`, y `src/types/index.ts` (tipos no usados en ningún componente).
+
+Lo que **NO está hecho todavía** (y es esperado en esta fase):
+- Los datos de la Home siguen parcialmente hardcodeados (categorías, testimonials)
+- El carrito del Navbar no tiene lógica real
+- Hay inline styles en lugar de clases Tailwind en algunos componentes
 
 **Esto es correcto para esta etapa.** El sitio es una maqueta visual funcional, no un e-commerce real.
 
@@ -21,52 +21,37 @@ El flujo de trabajo es iterativo: **ruta por ruta, sección por sección**.
 
 1. El usuario indica qué ruta quiere construir o modificar a continuación
 2. Se implementa esa ruta con datos reales y funcionalidad real
-3. Las rutas que el usuario decida eliminar se borran del Navbar, Footer y del código
+3. Las rutas que el usuario decida eliminar se borran del Navbar, Footer y del código (incluyendo componentes y assets exclusivos que queden huérfanos)
 4. Nunca se añade funcionalidad no pedida explícitamente
 
 ---
 
 ## Rutas actuales del proyecto
 
-### Existen y tienen contenido visual
 | Ruta | Componente principal | Estado |
 |------|---------------------|--------|
-| `/` | Redirect a `/shop` | Funcional |
-| `/shop` | ShopHero + FilterSidebar + ProductGrid | Visual OK, filtros sin lógica |
-| `/about` | AboutHero + AboutFullPhoto + StorySection + Timeline + MissionValues + TeamSection + Testimonials + CTASection | Visual OK, datos hardcodeados |
+| `/` | TopBar + Navbar + Hero + Categories + Testimonials + Footer | Única ruta activa |
 
-### Referenciadas pero NO existen
-Estas rutas aparecen en el Navbar o Footer pero no tienen página. Son `#` o 404:
-- `/impact`
-- `/journal`
-- `/search`
-- `/account`
-- `/wishlist`
-- `/cart`
-- `/careers`
-- `/sizing`
-- `/contact`
-- `/faq`
-- `/privacy-policy`
-- `/terms`
-- `/shipping-returns`
+No hay rutas adicionales creadas todavía. El Navbar (categorías de producto) y el Footer (catálogo, legal) usan `#` como placeholder hasta que se pidan páginas reales.
 
 ---
 
 ## Navbar actual
 
-Links izquierda: **Shop · Impact · About · Journal**
-Links derecha: **Search · Account · Wishlist · Cart (0)**
-Logo: centrado, `/images/logo.svg`
+Categorías: **Camisetas · Sudaderas · Polos · Merchandising** (enlazan a `#`)
+Logo: centrado a la izquierda en mobile, `/images/logo_plasmalo.png`
+Carrito a la derecha (sin lógica real).
 
-Comportamiento: transparente en top → blanco con borde al scrollear (threshold: 400px).
+Comportamiento: blanco fijo (`sticky`), añade borde/sombra al hacer scroll.
 
 ---
 
 ## Footer actual
 
-Cuatro columnas: **SHOP · COMPANY · EXPLORE · LEGAL**
-La mayoría de links apuntan a `#`. Los únicos funcionales son `/`, `/shop`, `/about`.
+Cinco columnas: **Logo · Catálogo · Redes Sociales · Contacto · Legal**
+- Catálogo apunta a `#` (placeholder, sin páginas de producto aún)
+- Redes Sociales y Contacto tienen datos reales de Plásmalo (Instagram, WhatsApp, email, ubicación Barcelona)
+- Legal apunta a `#` (FAQ, Privacidad, Términos, Devoluciones, Envíos — sin páginas aún)
 
 ---
 
@@ -75,48 +60,34 @@ La mayoría de links apuntan a `#`. Los únicos funcionales son `/`, `/shop`, `/
 ```
 src/
   app/
-    layout.tsx          → Root layout: Public Sans font, Navbar + Footer wrapper
-    page.tsx            → Redirect a /shop
-    globals.css         → Tailwind v4, design tokens oklch, colores de marca
-    shop/page.tsx       → Página shop
-    about/page.tsx      → Página about
+    layout.tsx          → Root layout: fonts locales (General Sans, Satoshi)
+    page.tsx            → Home (única ruta)
+    globals.css         → Tailwind v4, design tokens, colores de marca
     favicon.ico
 
   components/
-    Navbar.tsx          → Fixed nav con scroll detection (client component)
-    Footer.tsx          → Footer oscuro con 4 columnas + social icons
-    ShopHero.tsx        → Hero section de shop
-    FilterSidebar.tsx   → Sidebar de filtros (UI sin lógica)
-    ProductGrid.tsx     → Grid de productos hardcodeados
-    ProductCard.tsx     → Card individual de producto
-    AboutHero.tsx       → Hero section de about
-    AboutFullPhoto.tsx  → Imagen full-width
-    StorySection.tsx    → Sección narrativa con imagen + texto
-    Timeline.tsx        → Timeline horizontal con scroll
-    MissionValues.tsx   → 4 tarjetas de valores
-    TeamSection.tsx     → Grid del equipo
-    Testimonials.tsx    → 3 testimonials
-    CTASection.tsx      → Sección CTA + formulario email (sin handler)
+    TopBar.tsx          → Banner superior con marquee (envío, producción, etc.)
+    Navbar.tsx          → Nav sticky con scroll detection (client component)
+    Hero.tsx            → Hero de la Home con imágenes y CTAs
+    Categories.tsx      → Grid de categorías de producto
+    Testimonials.tsx    → Marquee de testimonials reales de Plásmalo
+    Footer.tsx          → Footer con logo, catálogo, redes, contacto, legal
     ui/
       button.tsx        → shadcn Button con variantes
 
   lib/
     utils.ts            → cn() utility (clsx + tailwind-merge)
 
-  types/
-    index.ts            → Interfaces: Product, FilterState, SortOption, etc.
+  hooks/                → vacío (placeholder, .gitkeep)
+  types/                → vacío (placeholder, .gitkeep)
 ```
 
 ---
 
 ## Design tokens (globals.css)
 
-```
---refeet-dark:    rgb(23, 28, 27)    → Color principal oscuro (backgrounds, textos)
---refeet-muted:   rgb(118, 118, 118) → Textos secundarios
---refeet-surface: rgb(246, 247, 247) → Fondos claros
-Font: Public Sans (Google Fonts) → variable: --font-public-sans
-```
+Fuentes locales: **General Sans** (`--font-general-sans`) y **Satoshi** (`--font-satoshi`).
+Colores de marca definidos como variables CSS en `globals.css` (revisar el archivo directamente para valores actuales).
 
 ---
 
@@ -156,7 +127,7 @@ Font: Public Sans (Google Fonts) → variable: --font-public-sans
 - **React**: 19
 - **TypeScript**: strict mode
 - **Estilos**: Tailwind CSS v4 + shadcn/ui (base-nova)
-- **Fuente**: Public Sans (Google Fonts)
+- **Fuente**: General Sans + Satoshi (fonts locales en `src/app/fonts`)
 - **Icons**: Lucide React + SVGs inline en Footer
 - **Deploy target**: Vercel
 

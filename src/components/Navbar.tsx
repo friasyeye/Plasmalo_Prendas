@@ -3,111 +3,140 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Menu, X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const navLinks = [
-  { label: "Prendas", href: "/shop" },
-  { label: "Preguntas frecuentes", href: "/faq" },
-  { label: "Contacto", href: "/contacto" },
-];
+const productCategories = ["Camisetas", "Sudaderas", "Polos", "Merchandising"];
 
-export function Navbar() {
+function CartIcon({ size = 20 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="9" cy="20" r="1.4" />
+      <circle cx="17.5" cy="20" r="1.4" />
+      <path d="M2.5 3.5h3l2.6 12h10.4l2.4-8.5H6.4" />
+    </svg>
+  );
+}
+
+export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 400);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Cerrar menú al hacer scroll
-  useEffect(() => {
-    if (menuOpen) setMenuOpen(false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrolled]);
-
-  const textColor = scrolled || menuOpen
-    ? "text-black hover:text-black/60"
-    : "text-white hover:text-white/70";
-
   return (
-    <>
-      <div
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled || menuOpen ? "bg-white border-b border-black/10" : "bg-transparent"
-        }`}
-      >
-        <nav className="h-[60px] flex items-center justify-between px-6 md:px-10 max-w-[1440px] mx-auto">
+    <nav
+      className={cn(
+        "sticky top-0 left-0 right-0 z-50 bg-white transition-shadow duration-200",
+        scrolled ? "border-b border-gray-200 shadow-sm" : ""
+      )}
+    >
+      <div className="flex items-center justify-between px-4 md:px-8 py-4 h-16">
+        {/* Mobile: hamburger button */}
+        <button
+          aria-label="Abrir menú"
+          className="md:hidden text-black"
+          onClick={() => setMobileMenuOpen(true)}
+        >
+          <Menu size={24} />
+        </button>
 
-          {/* Logo — izquierda */}
-          <Link href="/" className="flex-shrink-0">
+        {/* Logo */}
+        <Link href="/" className="flex items-center shrink-0">
+          <Image
+            src="/images/logo_plasmalo.png"
+            alt="Plásmalo"
+            width={512}
+            height={512}
+            priority
+            className="h-12 w-12 md:h-14 md:w-14 object-contain"
+          />
+        </Link>
+
+        {/* Desktop: category links */}
+        <div className="hidden md:flex items-center gap-8">
+          {productCategories.map((category) => (
+            <a
+              key={category}
+              href="#"
+              className="text-[15px] font-medium capitalize text-black hover:opacity-70 transition-opacity"
+              style={{ fontFamily: "var(--font-satoshi)" }}
+            >
+              {category}
+            </a>
+          ))}
+        </div>
+
+        {/* Right side: cart */}
+        <div className="flex items-center gap-4 md:gap-6">
+          <button
+            aria-label="Carrito"
+            className="flex items-center text-black hover:opacity-70 transition-opacity"
+          >
+            <CartIcon size={20} />
+            <span className="text-sm ml-0.5">0</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-white md:hidden">
+          <div className="flex items-center justify-between px-4 py-4 h-16 border-b border-gray-200">
             <Image
-              src="/images/logo.svg"
+              src="/images/logo_plasmalo.png"
               alt="Plásmalo"
-              width={28}
-              height={28}
-              className={scrolled || menuOpen ? "invert-0" : "invert"}
+              width={512}
+              height={512}
+              className="h-12 w-12 object-contain"
             />
-          </Link>
-
-          {/* Links centrados — solo desktop */}
-          <div className="hidden md:flex items-center gap-8 absolute left-1/2 -translate-x-1/2">
-            {navLinks.map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className={`text-sm font-normal transition-colors ${textColor}`}
-              >
-                {label}
-              </Link>
-            ))}
+            <button
+              aria-label="Cerrar menú"
+              className="text-black"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <X size={24} />
+            </button>
           </div>
 
-          {/* Botón hamburguesa — solo móvil */}
-          <button
-            className="md:hidden flex flex-col justify-center gap-[5px] w-8 h-8 ml-auto"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-            aria-expanded={menuOpen}
-          >
-            <span
-              className={`block h-px w-6 transition-all duration-300 origin-center ${
-                scrolled || menuOpen ? "bg-black" : "bg-white"
-              } ${menuOpen ? "rotate-45 translate-y-[7px]" : ""}`}
-            />
-            <span
-              className={`block h-px w-6 transition-all duration-300 ${
-                scrolled || menuOpen ? "bg-black" : "bg-white"
-              } ${menuOpen ? "opacity-0" : ""}`}
-            />
-            <span
-              className={`block h-px w-6 transition-all duration-300 origin-center ${
-                scrolled || menuOpen ? "bg-black" : "bg-white"
-              } ${menuOpen ? "-rotate-45 -translate-y-[7px]" : ""}`}
-            />
-          </button>
-        </nav>
-
-        {/* Menú móvil desplegable */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 bg-white border-t border-black/10 ${
-            menuOpen ? "max-h-64 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          <div className="flex flex-col px-6 py-4 gap-4">
-            {navLinks.map(({ label, href }) => (
-              <Link
-                key={label}
-                href={href}
-                className="text-sm font-normal text-black hover:text-black/60 transition-colors"
-                onClick={() => setMenuOpen(false)}
+          <div className="flex flex-col px-4 py-6">
+            <p
+              className="text-xs uppercase tracking-wider text-gray-400 mb-3"
+              style={{ fontFamily: "var(--font-satoshi)" }}
+            >
+              Productos
+            </p>
+            {productCategories.map((category) => (
+              <a
+                key={category}
+                href="#"
+                className="text-lg text-black py-3 border-b border-gray-100"
+                style={{ fontFamily: "var(--font-satoshi)" }}
+                onClick={() => setMobileMenuOpen(false)}
               >
-                {label}
-              </Link>
+                {category}
+              </a>
             ))}
           </div>
         </div>
-      </div>
-    </>
+      )}
+    </nav>
   );
 }

@@ -1,8 +1,8 @@
-import "./FFTopBar.css";
+import "./TopBar.css";
 
 const REPETITIONS = 6;
 
-export function FFTopBar() {
+export function TopBar() {
   const separator = (
     <span className="mx-7 text-white/60 select-none" aria-hidden="true">
       ·

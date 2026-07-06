@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export function FFHero() {
+export function Hero() {
   const headingStyle: React.CSSProperties = {
     fontFamily: "var(--font-general-sans)",
     fontSize: "clamp(28px, 4vw, 56px)",
@@ -14,14 +14,52 @@ export function FFHero() {
 
   return (
     <section className="relative w-full min-h-screen overflow-hidden">
-      {/* Imagen de fondo a sección completa */}
-      <Image
-        src="/fabfit/hero-fashion.jpg"
-        alt="Ropa personalizada"
-        fill
-        priority
-        className="object-cover object-center"
-      />
+      {/* Desktop: 3 imágenes en grid */}
+      <div className="hidden md:grid absolute inset-0 grid-cols-3">
+        <div className="relative h-full w-full">
+          <Image
+            src="/images/hero_3.jpg"
+            alt="Ropa personalizada"
+            fill
+            priority
+            sizes="33vw"
+            className="object-cover object-center"
+          />
+        </div>
+        <div className="relative h-full w-full">
+          <Image
+            src="/images/hero_2.jpg"
+            alt="Ropa personalizada"
+            fill
+            priority
+            sizes="33vw"
+            className="object-cover object-center"
+          />
+        </div>
+        <div className="relative h-full w-full">
+          <Image
+            src="/images/hero_1.jpg"
+            alt="Ropa personalizada"
+            fill
+            priority
+            sizes="33vw"
+            className="object-cover object-center"
+          />
+        </div>
+      </div>
+
+      {/* Mobile: solo hero_1 */}
+      <div className="md:hidden absolute inset-0">
+        <Image
+          src="/images/hero_1.jpg"
+          alt="Ropa personalizada"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+      </div>
+
       {/* Overlay para legibilidad del texto */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/40" />
 

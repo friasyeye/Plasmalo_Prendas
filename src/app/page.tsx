@@ -1,21 +1,21 @@
-import { FFTopBar } from "@/components/FFTopBar";
-import FFNavbar from "@/components/FFNavbar";
-import { FFHero } from "@/components/FFHero";
-import { FFCategories } from "@/components/FFCategories";
-import { FFTestimonials } from "@/components/FFTestimonials";
-import { FFFooter } from "@/components/FFFooter";
+import { TopBar } from "@/components/TopBar";
+import Navbar from "@/components/Navbar";
+import { Hero } from "@/components/Hero";
+import { Categories } from "@/components/Categories";
+import { Testimonials } from "@/components/Testimonials";
+import { Footer } from "@/components/Footer";
 
 export default function Home() {
   return (
     <>
-      <FFTopBar />
-      <FFNavbar />
+      <TopBar />
+      <Navbar />
       <main>
-        <FFHero />
-        <FFCategories />
-        <FFTestimonials />
+        <Hero />
+        <Categories />
+        <Testimonials />
       </main>
-      <FFFooter />
+      <Footer />
     </>
   );
 }
