@@ -1,9 +1,9 @@
-import { TopBar } from "@/components/TopBar";
-import Navbar from "@/components/Navbar";
-import { Hero } from "@/components/Hero";
-import { Categories } from "@/components/Categories";
-import { Testimonials } from "@/components/Testimonials";
-import { Footer } from "@/components/Footer";
+import { TopBar } from "@/components/layout/TopBar";
+import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
+import { Hero } from "@/components/home/Hero";
+import { Categories } from "@/components/home/Categories";
+import { Testimonials } from "@/components/home/Testimonials";
 
 export default function Home() {
   return (
