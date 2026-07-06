@@ -1,0 +1,59 @@
+import { getShopifyConfig } from "@/config/env";
+
+/**
+ * Cliente mínimo de la Shopify Storefront API (GraphQL).
+ *
+ * Es la ÚNICA puerta de salida hacia Shopify: ningún componente hace fetch
+ * directo. Los server components llaman a funciones de esta capa, que a su
+ * vez usan shopifyFetch con un documento GraphQL de ./queries.
+ */
+
+interface ShopifyFetchOptions {
+  query: string;
+  variables?: Record<string, unknown>;
+  /**
+   * Segundos de caché ISR para esta petición (revalidate de Next.js).
+   * Por defecto 2h; los webhooks de Shopify harán revalidación on-demand.
+   */
+  revalidate?: number;
+}
+
+const DEFAULT_REVALIDATE_SECONDS = 7200; // 2 horas
+
+export async function shopifyFetch<TData>({
+  query,
+  variables,
+  revalidate = DEFAULT_REVALIDATE_SECONDS,
+}: ShopifyFetchOptions): Promise<TData> {
+  const { storeDomain, storefrontAccessToken, apiVersion } = getShopifyConfig();
+
+  const response = await fetch(
+    `https://${storeDomain}/api/${apiVersion}/graphql.json`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+      },
+      body: JSON.stringify({ query, variables }),
+      next: { revalidate },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error(`Shopify respondió ${response.status} ${response.statusText}`);
+  }
+
+  const json: { data?: TData; errors?: Array<{ message: string }> } =
+    await response.json();
+
+  if (json.errors?.length) {
+    throw new Error(`Error GraphQL de Shopify: ${json.errors[0].message}`);
+  }
+
+  if (!json.data) {
+    throw new Error("Shopify no devolvió datos");
+  }
+
+  return json.data;
+}
