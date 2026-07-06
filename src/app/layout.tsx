@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   title: "Plásmalo | Ropa Personalizada para Empresas y Eventos",
   description: "Personaliza ropa y merchandising para tu empresa o evento. DTF, bordado y diseño a medida,   ▷ Sin pedido mínimo. Envíos a toda España.",
   icons: {
-    icon: "/seo/favicon.png",
+    icon: "/images/logo_plasmalo.png",
   },
 };
 

@@ -48,10 +48,10 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Mobile: solo hero_1 */}
+      {/* Mobile: solo hero_3 (misma que la primera del desktop) */}
       <div className="md:hidden absolute inset-0">
         <Image
-          src="/images/hero_1.jpg"
+          src="/images/hero_3.jpg"
           alt="Ropa personalizada"
           fill
           priority

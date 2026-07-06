@@ -1,4 +1,8 @@
 import { getShopifyConfig } from "@/config/env";
+import { getFeaturedProductQuery } from "./queries/collections";
+import { toHomeFeaturedCategory } from "./adapters";
+import type { ShopifyFeaturedProductResponse } from "./types";
+import type { HomeCategory } from "@/config/home";
 
 /**
  * Cliente mínimo de la Shopify Storefront API (GraphQL).
@@ -33,7 +37,7 @@ export async function shopifyFetch<TData>({
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-Shopify-Storefront-Access-Token": storefrontAccessToken,
+        "Shopify-Storefront-Private-Token": storefrontAccessToken,
       },
       body: JSON.stringify({ query, variables }),
       next: { revalidate },
@@ -56,4 +60,24 @@ export async function shopifyFetch<TData>({
   }
 
   return json.data;
+}
+
+const FEATURED_COLLECTION_HANDLE = "destacados";
+
+/**
+ * Primer producto de la colección "destacados" (gestionada por el cliente
+ * desde el admin de Shopify), listo para pintarse en Categories.tsx.
+ * Devuelve null si la colección no existe, está vacía, o falla la petición
+ * (Categories.tsx oculta la tarjeta en ese caso en vez de mostrar un dato falso).
+ */
+export async function getFeaturedProduct(): Promise<HomeCategory | null> {
+  try {
+    const data = await shopifyFetch<ShopifyFeaturedProductResponse>({
+      query: getFeaturedProductQuery,
+      variables: { handle: FEATURED_COLLECTION_HANDLE },
+    });
+    return toHomeFeaturedCategory(data);
+  } catch {
+    return null;
+  }
 }

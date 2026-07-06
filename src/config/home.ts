@@ -9,10 +9,16 @@
 export interface HomeCategory {
   name: string;
   img: string;
+  /** Segunda imagen (p. ej. de un producto real de Shopify) que sustituye a `img` en hover. */
+  hoverImg?: string;
 }
 
-export const homeCategories: HomeCategory[] = [
-  { name: "Camiseta", img: "/fabfit/category-jerseys.png" },
+/**
+ * Placeholders estáticos del grid "Elige la prenda y hazla tuya". La primera
+ * tarjeta (Camiseta) se sustituye en src/app/page.tsx por el producto real de
+ * la colección "destacados" de Shopify cuando está disponible.
+ */
+export const placeholderHomeCategories: HomeCategory[] = [
   { name: "Sudadera", img: "/fabfit/category-accessories.png" },
   { name: "Polo", img: "/fabfit/category-sports.png" },
   { name: "Gorra", img: "/fabfit/product-grey-comfort.png" },

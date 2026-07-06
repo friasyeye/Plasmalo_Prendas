@@ -1,8 +1,12 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import { homeCategories } from "@/config/home";
+import type { HomeCategory } from "@/config/home";
 
-export function Categories() {
+interface CategoriesProps {
+  categories: HomeCategory[];
+}
+
+export function Categories({ categories }: CategoriesProps) {
   return (
     <section className="bg-white px-8 py-16">
       <h2
@@ -27,15 +31,29 @@ export function Categories() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {homeCategories.map(({ name, img }) => (
+        {categories.map(({ name, img, hoverImg }) => (
           <div key={name} className="cursor-pointer group">
-            <div className="relative h-[220px] md:h-[340px] bg-[rgb(245,245,245)] overflow-hidden">
+            <div className="relative aspect-2/3 bg-[rgb(245,245,245)] overflow-hidden">
               <Image
                 src={img}
                 alt={name}
                 fill
-                className="object-contain p-2 md:p-8"
+                sizes="(max-width: 768px) 50vw, 25vw"
+                className={
+                  hoverImg
+                    ? "object-cover transition-opacity duration-300 group-hover:opacity-0"
+                    : "object-cover"
+                }
               />
+              {hoverImg && (
+                <Image
+                  src={hoverImg}
+                  alt={name}
+                  fill
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                  className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                />
+              )}
             </div>
             <div className="flex justify-between items-center pt-3 pb-1">
               <h3

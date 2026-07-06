@@ -41,7 +41,8 @@ export const footerLinks: { catalogo: FooterLink[]; legal: FooterLink[] } = {
 };
 
 export const contactInfo = {
-  tagline: "Prendas personalizadas con diseño y calidad",
+  tagline:
+    "Creemos que cada prenda cuenta una historia. Por eso en Plásmalo combinamos diseño, calidad y cercanía para que tu proyecto, equipo o marca luzcan exactamente como los imaginas.",
   instagram: {
     handle: "@plasmalo_prendas",
     url: "https://instagram.com/plasmalo_prendas",
