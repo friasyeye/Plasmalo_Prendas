@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Mail, MessageCircle, MapPin } from "lucide-react";
 import { InstagramIcon } from "@/components/icons/InstagramIcon";
+import { footerLinks, contactInfo } from "@/config/site";
 
 export function Footer() {
   const columnTitleClass = "font-semibold text-base text-black mb-3";
@@ -18,28 +19,28 @@ export function Footer() {
             height={512}
             className="h-12 w-12 object-contain"
           />
-          <p className="text-xs text-gray-600">Prendas personalizadas con diseño y calidad</p>
+          <p className="text-xs text-gray-600">{contactInfo.tagline}</p>
         </div>
 
         {/* Column 2 — Menu */}
         <div>
           <p className={columnTitleClass}>Catálogo</p>
-          <a href="#" className={linkClass}>Camisetas</a>
-          <a href="#" className={linkClass}>Sudaderas</a>
-          <a href="#" className={linkClass}>Polos</a>
+          {footerLinks.catalogo.map(({ label, href }) => (
+            <a key={label} href={href} className={linkClass}>{label}</a>
+          ))}
         </div>
 
         {/* Column 3 — Redes Sociales con iconos */}
         <div>
           <p className={columnTitleClass}>Redes Sociales</p>
           <div className="space-y-3">
-            <a href="https://instagram.com/plasmalo_prendas" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
+            <a href={contactInfo.instagram.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
               <InstagramIcon size={18} />
-              <span className="text-sm">@plasmalo_prendas</span>
+              <span className="text-sm">{contactInfo.instagram.handle}</span>
             </a>
-            <a href="https://wa.me/34632742050" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
+            <a href={contactInfo.whatsapp.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
               <MessageCircle size={18} />
-              <span className="text-sm">+34 632 742 050</span>
+              <span className="text-sm">{contactInfo.whatsapp.label}</span>
             </a>
           </div>
         </div>
@@ -48,13 +49,13 @@ export function Footer() {
         <div>
           <p className={columnTitleClass}>Contacto</p>
           <div className="space-y-3">
-            <a href="mailto:esperandocorreo@gmail.com" className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
+            <a href={`mailto:${contactInfo.email}`} className="flex items-center gap-2 text-black hover:opacity-70 transition-opacity">
               <Mail size={18} />
-              <span className="text-sm">esperandocorreo@gmail.com</span>
+              <span className="text-sm">{contactInfo.email}</span>
             </a>
             <div className="flex items-center gap-2 text-black">
               <MapPin size={18} />
-              <span className="text-sm">Barcelona, España</span>
+              <span className="text-sm">{contactInfo.location}</span>
             </div>
           </div>
         </div>
@@ -62,11 +63,9 @@ export function Footer() {
         {/* Column 5 — Legal Pages */}
         <div>
           <p className={columnTitleClass}>Legal</p>
-          <a href="#" className={linkClass}>FAQ</a>
-          <a href="#" className={linkClass}>Política de Privacidad</a>
-          <a href="#" className={linkClass}>Términos de Servicio</a>
-          <a href="#" className={linkClass}>Política de Devoluciones</a>
-          <a href="#" className={linkClass}>Envíos</a>
+          {footerLinks.legal.map(({ label, href }) => (
+            <a key={label} href={href} className={linkClass}>{label}</a>
+          ))}
         </div>
       </div>
     </footer>

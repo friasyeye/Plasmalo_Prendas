@@ -1,12 +1,6 @@
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-
-const categories = [
-  { name: "Camiseta", img: "/fabfit/category-jerseys.png" },
-  { name: "Sudadera", img: "/fabfit/category-accessories.png" },
-  { name: "Polo", img: "/fabfit/category-sports.png" },
-  { name: "Gorra", img: "/fabfit/product-grey-comfort.png" },
-];
+import { homeCategories } from "@/config/home";
 
 export function Categories() {
   return (
@@ -33,7 +27,7 @@ export function Categories() {
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {categories.map(({ name, img }) => (
+        {homeCategories.map(({ name, img }) => (
           <div key={name} className="cursor-pointer group">
             <div className="relative h-[220px] md:h-[340px] bg-[rgb(245,245,245)] overflow-hidden">
               <Image

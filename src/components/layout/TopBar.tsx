@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+import { topBarMessages } from "@/config/site";
 import "./TopBar.css";
 
 const REPETITIONS = 6;
@@ -11,11 +13,12 @@ export function TopBar() {
 
   const bannerContent = (
     <>
-      <span>Sin pedido mínimo</span>
-      {separator}
-      <span>Envío gratis desde 50€</span>
-      {separator}
-      <span>Producción en 4-7 días</span>
+      {topBarMessages.map((message, index) => (
+        <Fragment key={message}>
+          {index > 0 && separator}
+          <span>{message}</span>
+        </Fragment>
+      ))}
     </>
   );
 

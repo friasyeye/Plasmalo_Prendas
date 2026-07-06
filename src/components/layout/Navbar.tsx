@@ -6,8 +6,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CartIcon } from "@/components/icons/CartIcon";
-
-const productCategories = ["Camisetas", "Sudaderas", "Polos", "Merchandising"];
+import { navCategories } from "@/config/site";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -53,7 +52,7 @@ export function Navbar() {
 
         {/* Desktop: category links */}
         <div className="hidden md:flex items-center gap-8">
-          {productCategories.map((category) => (
+          {navCategories.map((category) => (
             <a
               key={category}
               href="#"
@@ -104,7 +103,7 @@ export function Navbar() {
             >
               Productos
             </p>
-            {productCategories.map((category) => (
+            {navCategories.map((category) => (
               <a
                 key={category}
                 href="#"
