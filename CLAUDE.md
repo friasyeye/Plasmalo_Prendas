@@ -7,7 +7,9 @@ Este proyecto nació como **clon visual** de dos templates distintos (Refeet par
 **`/about` y `/shop` fueron eliminadas** (2026-07-06): eran páginas huérfanas sin Navbar ni Footer propios, con contenido 100% del template original en inglés (Refeet, "zapatillas sostenibles"), sin ninguna relación con Plásmalo. Se limpiaron también sus 11 componentes exclusivos, sus assets en `/public/images`, y `src/types/index.ts` (tipos no usados en ningún componente).
 
 Lo que **NO está hecho todavía** (y es esperado en esta fase):
-- Los datos de la Home siguen parcialmente hardcodeados (categorías, testimonials)
+- Los datos de la Home viven en `src/config/` (extraídos de los componentes en la reestructuración de 2026-07-06), pero siguen siendo estáticos — aún no vienen de Shopify
+- Los testimonials son contenido placeholder del template (en inglés, avatares de stock) — sustituir por reales antes de lanzar
+- Las imágenes del grid de categorías son placeholders del template (`/public/fabfit/`)
 - El carrito del Navbar no tiene lógica real
 - Hay inline styles en lugar de clases Tailwind en algunos componentes
 
@@ -55,32 +57,56 @@ Cinco columnas: **Logo · Catálogo · Redes Sociales · Contacto · Legal**
 
 ---
 
-## Componentes existentes
+## Estructura del proyecto (reestructuración 2026-07-06)
+
+Regla general: **`app/` compone, `components/` pinta, `lib/` calcula y habla
+con Shopify, `config/` contiene datos y entorno**. Los componentes no hacen
+fetch ni contienen datos: los reciben de `config/` (hoy) o de `lib/shopify`
+(cuando se conecte el catálogo).
 
 ```
 src/
   app/
     layout.tsx          → Root layout: fonts locales (General Sans, Satoshi)
-    page.tsx            → Home (única ruta)
+    page.tsx            → Home (única ruta); solo compone secciones
     globals.css         → Tailwind v4, design tokens, colores de marca
-    favicon.ico
 
   components/
-    TopBar.tsx          → Banner superior con marquee (envío, producción, etc.)
-    Navbar.tsx          → Nav sticky con scroll detection (client component)
-    Hero.tsx            → Hero de la Home con imágenes y CTAs
-    Categories.tsx      → Grid de categorías de producto
-    Testimonials.tsx    → Marquee de testimonials reales de Plásmalo
-    Footer.tsx          → Footer con logo, catálogo, redes, contacto, legal
+    layout/             → chrome del sitio (presente en todas las páginas)
+      TopBar.tsx (+css) → Banner superior con marquee
+      Navbar.tsx        → Nav sticky con scroll detection (client component)
+      Footer.tsx        → Footer con logo, catálogo, redes, contacto, legal
+    home/               → secciones específicas de la Home
+      Hero.tsx          → Hero con imágenes y CTAs
+      Categories.tsx    → Grid de categorías de producto
+      Testimonials.tsx  → Marquee de testimonials (contenido placeholder del template)
+    icons/              → SVGs compartidos (CartIcon, InstagramIcon)
     ui/
-      button.tsx        → shadcn Button con variantes
+      button.tsx        → shadcn Button con variantes (aún sin uso)
+
+  config/
+    site.ts             → datos del chrome: nav, TopBar, footer, contacto
+    home.ts             → datos de la Home (categorías del grid, testimonials)
+    env.ts              → ÚNICO lector de process.env (ver .env.example)
 
   lib/
+    shopify/            → ÚNICA puerta hacia la Storefront API
+      client.ts         → shopifyFetch (GraphQL tipado, con revalidate ISR)
+      queries/          → documentos GraphQL (uno por área; ver su README)
+      types.ts          → tipos crudos de la API de Shopify
+      adapters.ts       → traduce tipos Shopify → tipos de dominio
+    pricing/
+      tiered-pricing.ts → cálculo puro de precios por tramos (testeable aislado)
     utils.ts            → cn() utility (clsx + tailwind-merge)
 
-  hooks/                → vacío (placeholder, .gitkeep)
-  types/                → vacío (placeholder, .gitkeep)
+  types/                → tipos de DOMINIO (Product, PriceTier…)
+  hooks/                → vacío (futuro: useCart…)
+  modules/
+    customizer-3d/      → reservado para el personalizador 3D (ver su README)
 ```
+
+Convenciones: componentes en `PascalCase.tsx` con **export con nombre** (no
+default); módulos no-React en `kebab-case.ts`; carpetas en minúscula.
 
 ---
 
@@ -136,10 +162,12 @@ Colores de marca definidos como variables CSS en `globals.css` (revisar el archi
 ## Comandos
 
 ```bash
-npm run dev        # Servidor de desarrollo (desde /PLASMALO_PRENDAS)
+npm run dev        # Servidor de desarrollo
 npm run build      # Build de producción
 npm run typecheck  # Verificar tipos TypeScript
 npm run lint       # ESLint
+npm run check      # lint + typecheck + build
 ```
 
-> Node.js >= 24 requerido. El package.json está en `/PLASMALO_PRENDAS/`, no en la raíz del repo.
+> Node.js >= 24 requerido. El package.json está en la raíz del repo
+> (la carpeta anidada duplicada se aplanó en la reestructuración de 2026-07-06).
