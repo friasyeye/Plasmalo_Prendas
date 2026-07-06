@@ -28,6 +28,10 @@ export const metadata: Metadata = {
   icons: {
     icon: "/images/logo_plasmalo.png",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function RootLayout({
