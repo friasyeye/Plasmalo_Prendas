@@ -125,7 +125,7 @@ Colores de marca definidos como variables CSS en `globals.css` (revisar el archi
    - Colecciones: `src/app/collection/[handle]/page.tsx`.
 
 2. **Home page (src/app/page.tsx)**
-   - Bajo el Hero, mostrar exactamente 3 productos en grid dinámico.
+   - Bajo el Hero, mostrar exactamente 4 productos en grid dinámico (hoy `Categories.tsx` muestra 4 categorías estáticas con placeholders de `/fabfit/`; pasarán a ser 4 productos reales).
    - Implementación: consultar la Storefront API de Shopify para productos de la colección con handle `home` o `destacados` — así el cliente gestiona los productos destacados desde el admin de Shopify sin tocar código.
    - Las product cards deben enlazar dinámicamente a `/product/${product.handle}` usando el componente `Link` de Next.js.
 
