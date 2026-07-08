@@ -1,8 +1,10 @@
 import { getShopifyConfig } from "@/config/env";
 import { getFeaturedProductQuery } from "./queries/collections";
-import { toHomeFeaturedCategory } from "./adapters";
-import type { ShopifyFeaturedProductResponse } from "./types";
+import { getProductQuery } from "./queries/product";
+import { toHomeFeaturedCategory, toProduct } from "./adapters";
+import type { ShopifyFeaturedProductResponse, ShopifyProductResponse } from "./types";
 import type { HomeCategory } from "@/config/home";
+import type { Product } from "@/types";
 
 /**
  * Cliente mínimo de la Shopify Storefront API (GraphQL).
@@ -80,4 +82,17 @@ export async function getFeaturedProduct(): Promise<HomeCategory | null> {
   } catch {
     return null;
   }
+}
+
+/**
+ * Producto completo para /product/[handle], incluyendo su tabla de tramos
+ * de precio (leída del metaobjeto enlazado vía el metacampo
+ * custom.tabla_de_precios). Devuelve null si el producto no existe.
+ */
+export async function getProduct(handle: string): Promise<Product | null> {
+  const data = await shopifyFetch<ShopifyProductResponse>({
+    query: getProductQuery,
+    variables: { handle },
+  });
+  return toProduct(data);
 }

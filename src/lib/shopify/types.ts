@@ -37,3 +37,57 @@ export interface ShopifyFeaturedProductResponse {
     };
   } | null;
 }
+
+/** Un metafield "simple" de Shopify: el valor siempre llega como string. */
+interface ShopifyMetafieldValue {
+  value: string;
+}
+
+/** Una entrada del metaobjeto "Tramo de precio" (cantidad_minima, precio_sin_iva). */
+interface ShopifyPriceTierMetaobject {
+  cantidadMinima: ShopifyMetafieldValue;
+  precioSinIva: ShopifyMetafieldValue;
+}
+
+export interface ShopifySelectedOption {
+  name: string;
+  value: string;
+}
+
+export interface ShopifyProductVariant {
+  id: string;
+  availableForSale: boolean;
+  selectedOptions: ShopifySelectedOption[];
+  image: ShopifyImage | null;
+}
+
+export interface ShopifyProductOption {
+  name: string;
+  optionValues: Array<{ name: string }>;
+}
+
+/** Respuesta cruda de getProductQuery (product.ts). */
+export interface ShopifyProductResponse {
+  product: {
+    handle: string;
+    title: string;
+    description: string;
+    featuredImage: ShopifyImage | null;
+    images: {
+      nodes: ShopifyImage[];
+    };
+    options: ShopifyProductOption[];
+    variants: {
+      nodes: ShopifyProductVariant[];
+    };
+    pricingTable: {
+      reference: {
+        field: {
+          references: {
+            nodes: ShopifyPriceTierMetaobject[];
+          };
+        } | null;
+      } | null;
+    } | null;
+  } | null;
+}

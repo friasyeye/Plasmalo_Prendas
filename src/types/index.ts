@@ -24,8 +24,26 @@ export interface Product {
   title: string;
   description: string;
   featuredImage?: ProductImage;
+  /** Todas las fotos del producto (incluye featuredImage si Shopify la repite ahí). */
+  images: ProductImage[];
+  /** Opciones de variante disponibles, p. ej. { name: "Talla", values: ["S","M","L"] }. */
+  options: ProductOption[];
+  variants: ProductVariant[];
   /** Tabla de tramos de precio (desde metaobjects de Shopify). */
   priceTiers: PriceTier[];
+}
+
+export interface ProductOption {
+  name: string;
+  values: string[];
+}
+
+export interface ProductVariant {
+  id: string;
+  availableForSale: boolean;
+  /** p. ej. { Talla: "M", Color: "Negro" } */
+  selectedOptions: Record<string, string>;
+  image?: ProductImage;
 }
 
 export interface ProductImage {

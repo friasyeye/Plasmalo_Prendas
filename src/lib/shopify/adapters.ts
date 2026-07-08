@@ -7,8 +7,9 @@
  * de plataforma, solo se toca esta capa.
  */
 
-import type { ShopifyFeaturedProductResponse } from "./types";
+import type { ShopifyFeaturedProductResponse, ShopifyProductResponse } from "./types";
 import type { HomeCategory } from "@/config/home";
+import type { Product, PriceTier, ProductOption, ProductVariant } from "@/types";
 
 /**
  * Traduce la respuesta de getFeaturedProductQuery a la forma que pinta
@@ -28,5 +29,58 @@ export function toHomeFeaturedCategory(
     name: product.title,
     img: firstImage.url,
     hoverImg: secondImage?.url,
+  };
+}
+
+/**
+ * Un metacampo de tipo "Dinero" en un metaobjeto llega como un string JSON
+ * (p. ej. '{"amount":"8.1","currency_code":"EUR"}'), no como número plano.
+ */
+function parseMoneyFieldValue(value: string): number {
+  const parsed: { amount: string } = JSON.parse(value);
+  return Number(parsed.amount);
+}
+
+/**
+ * Traduce la respuesta de getProductQuery a Product (tipo de dominio),
+ * incluyendo la tabla de tramos de precio leída del metaobjeto enlazado.
+ * Devuelve null si el producto no existe.
+ */
+export function toProduct(raw: ShopifyProductResponse): Product | null {
+  const product = raw.product;
+  if (!product) return null;
+
+  const tierNodes = product.pricingTable?.reference?.field?.references.nodes ?? [];
+
+  const priceTiers: PriceTier[] = tierNodes
+    .map((tier) => ({
+      minQuantity: Number(tier.cantidadMinima.value),
+      unitPrice: parseMoneyFieldValue(tier.precioSinIva.value),
+    }))
+    .sort((a, b) => a.minQuantity - b.minQuantity);
+
+  const options: ProductOption[] = product.options.map((option) => ({
+    name: option.name,
+    values: option.optionValues.map((v) => v.name),
+  }));
+
+  const variants: ProductVariant[] = product.variants.nodes.map((variant) => ({
+    id: variant.id,
+    availableForSale: variant.availableForSale,
+    selectedOptions: Object.fromEntries(
+      variant.selectedOptions.map((o) => [o.name, o.value])
+    ),
+    image: variant.image ?? undefined,
+  }));
+
+  return {
+    handle: product.handle,
+    title: product.title,
+    description: product.description,
+    featuredImage: product.featuredImage ?? undefined,
+    images: product.images.nodes,
+    options,
+    variants,
+    priceTiers,
   };
 }
