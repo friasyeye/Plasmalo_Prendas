@@ -3,16 +3,16 @@ import { testimonials } from "@/config/home";
 
 export function Testimonials() {
   return (
-    <section className="bg-white px-4 md:px-8 py-16">
-      <div className="max-w-2xl mx-auto text-center mb-10">
+    <section className="bg-[#FAFAFA] px-4 md:px-8 py-16 min-h-screen flex flex-col justify-center">
+      <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20 -mt-16 md:-mt-24">
         <p
-          className="text-black mb-3"
+          className="text-black mb-5"
           style={{
             fontFamily: "var(--font-general-sans)",
             fontSize: "clamp(17px, 4.5vw, 22px)",
             fontWeight: 600,
             letterSpacing: "-0.01em",
-            lineHeight: 1.35,
+            lineHeight: 1.5,
           }}
         >
           En Plásmalo creemos que la ropa que llevas habla por ti antes de que
@@ -31,14 +31,14 @@ export function Testimonials() {
       <div
         className="overflow-hidden -mx-4 md:-mx-8 px-4 md:px-8 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
       >
-        <div className="flex w-max gap-4 animate-marquee">
+        <div className="flex w-max gap-6 animate-marquee">
           {[...testimonials, ...testimonials].map((testimonial, index) => (
             <div
               key={`${testimonial.name}-${index}`}
-              className="border border-gray-200 rounded-none p-8 w-[320px] md:w-[380px] shrink-0"
+              className="bg-white border border-gray-200 rounded-none p-10 w-[320px] md:w-[400px] shrink-0"
             >
               {/* Top row: avatar + name/role */}
-              <div className="flex items-center gap-3 mb-4">
+              <div className="flex items-center gap-3 mb-6">
                 <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
                   <Image
                     src={testimonial.avatar}
@@ -59,7 +59,7 @@ export function Testimonials() {
 
               {/* Quote */}
               <p
-                className="text-base text-black italic mb-3"
+                className="text-base text-black italic mb-5 leading-relaxed"
                 style={{ fontFamily: "var(--font-satoshi)" }}
               >
                 {testimonial.quote}

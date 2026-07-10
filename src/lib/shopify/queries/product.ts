@@ -10,14 +10,6 @@ export const getProductQuery = /* GraphQL */ `
         width
         height
       }
-      images(first: 10) {
-        nodes {
-          url
-          altText
-          width
-          height
-        }
-      }
       options {
         name
         optionValues {
@@ -37,6 +29,20 @@ export const getProductQuery = /* GraphQL */ `
             altText
             width
             height
+          }
+          gallery: metafield(namespace: "custom", key: "galeria") {
+            references(first: 10) {
+              nodes {
+                ... on MediaImage {
+                  image {
+                    url
+                    altText
+                    width
+                    height
+                  }
+                }
+              }
+            }
           }
         }
       }

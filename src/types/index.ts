@@ -24,8 +24,6 @@ export interface Product {
   title: string;
   description: string;
   featuredImage?: ProductImage;
-  /** Todas las fotos del producto (incluye featuredImage si Shopify la repite ahí). */
-  images: ProductImage[];
   /** Opciones de variante disponibles, p. ej. { name: "Talla", values: ["S","M","L"] }. */
   options: ProductOption[];
   variants: ProductVariant[];
@@ -44,6 +42,11 @@ export interface ProductVariant {
   /** p. ej. { Talla: "M", Color: "Negro" } */
   selectedOptions: Record<string, string>;
   image?: ProductImage;
+  /**
+   * Fotos de la variante (metacampo custom.galeria). Solo una variante por
+   * color las lleva rellenas; la galería del color se busca en cualquiera.
+   */
+  galleryImages: ProductImage[];
 }
 
 export interface ProductImage {

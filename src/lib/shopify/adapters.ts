@@ -71,6 +71,10 @@ export function toProduct(raw: ShopifyProductResponse): Product | null {
       variant.selectedOptions.map((o) => [o.name, o.value])
     ),
     image: variant.image ?? undefined,
+    galleryImages:
+      variant.gallery?.references?.nodes
+        .map((node) => node.image)
+        .filter((image): image is NonNullable<typeof image> => Boolean(image)) ?? [],
   }));
 
   return {
@@ -78,7 +82,6 @@ export function toProduct(raw: ShopifyProductResponse): Product | null {
     title: product.title,
     description: product.description,
     featuredImage: product.featuredImage ?? undefined,
-    images: product.images.nodes,
     options,
     variants,
     priceTiers,

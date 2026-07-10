@@ -59,6 +59,15 @@ export interface ShopifyProductVariant {
   availableForSale: boolean;
   selectedOptions: ShopifySelectedOption[];
   image: ShopifyImage | null;
+  /**
+   * Metacampo custom.galeria (lista de archivos): las fotos de la variante.
+   * Los nodos que no sean MediaImage llegan como objeto vacío (image ausente).
+   */
+  gallery: {
+    references: {
+      nodes: Array<{ image?: ShopifyImage | null }>;
+    } | null;
+  } | null;
 }
 
 export interface ShopifyProductOption {
@@ -73,9 +82,6 @@ export interface ShopifyProductResponse {
     title: string;
     description: string;
     featuredImage: ShopifyImage | null;
-    images: {
-      nodes: ShopifyImage[];
-    };
     options: ShopifyProductOption[];
     variants: {
       nodes: ShopifyProductVariant[];
