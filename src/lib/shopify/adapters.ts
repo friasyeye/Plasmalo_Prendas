@@ -7,29 +7,31 @@
  * de plataforma, solo se toca esta capa.
  */
 
-import type { ShopifyFeaturedProductResponse, ShopifyProductResponse } from "./types";
+import type { ShopifyFeaturedProductsResponse, ShopifyProductResponse } from "./types";
 import type { HomeCategory } from "@/config/home";
 import type { Product, PriceTier, ProductOption, ProductVariant } from "@/types";
 
 /**
- * Traduce la respuesta de getFeaturedProductQuery a la forma que pinta
- * Categories.tsx. Devuelve null si la colección no existe o no tiene
- * productos (Categories.tsx debe ocultar la tarjeta en ese caso).
+ * Traduce la respuesta de getFeaturedProductsQuery a la forma que pinta
+ * Categories.tsx. Devuelve [] si la colección no existe o no tiene productos;
+ * los productos sin imagen se descartan (una tarjeta sin foto no se pinta).
  */
-export function toHomeFeaturedCategory(
-  raw: ShopifyFeaturedProductResponse
-): HomeCategory | null {
-  const product = raw.collection?.products.nodes[0];
-  if (!product) return null;
+export function toHomeFeaturedCategories(
+  raw: ShopifyFeaturedProductsResponse
+): HomeCategory[] {
+  const products = raw.collection?.products.nodes ?? [];
 
-  const [firstImage, secondImage] = product.images.nodes;
-  if (!firstImage) return null;
+  return products.flatMap((product) => {
+    const [firstImage, secondImage] = product.images.nodes;
+    if (!firstImage) return [];
 
-  return {
-    name: product.title,
-    img: firstImage.url,
-    hoverImg: secondImage?.url,
-  };
+    return {
+      name: product.title,
+      img: firstImage.url,
+      hoverImg: secondImage?.url,
+      handle: product.handle,
+    };
+  });
 }
 
 /**

@@ -1,8 +1,8 @@
 import { getShopifyConfig } from "@/config/env";
-import { getFeaturedProductQuery } from "./queries/collections";
+import { getFeaturedProductsQuery } from "./queries/collections";
 import { getProductQuery } from "./queries/product";
-import { toHomeFeaturedCategory, toProduct } from "./adapters";
-import type { ShopifyFeaturedProductResponse, ShopifyProductResponse } from "./types";
+import { toHomeFeaturedCategories, toProduct } from "./adapters";
+import type { ShopifyFeaturedProductsResponse, ShopifyProductResponse } from "./types";
 import type { HomeCategory } from "@/config/home";
 import type { Product } from "@/types";
 
@@ -67,20 +67,20 @@ export async function shopifyFetch<TData>({
 const FEATURED_COLLECTION_HANDLE = "destacados";
 
 /**
- * Primer producto de la colección "destacados" (gestionada por el cliente
- * desde el admin de Shopify), listo para pintarse en Categories.tsx.
- * Devuelve null si la colección no existe, está vacía, o falla la petición
- * (Categories.tsx oculta la tarjeta en ese caso en vez de mostrar un dato falso).
+ * Hasta 4 productos de la colección "destacados" (gestionada por el cliente
+ * desde el admin de Shopify), listos para pintarse en Categories.tsx.
+ * Devuelve [] si la colección no existe, está vacía, o falla la petición;
+ * la Home rellena los huecos con placeholders hasta completar 4 tarjetas.
  */
-export async function getFeaturedProduct(): Promise<HomeCategory | null> {
+export async function getFeaturedProducts(): Promise<HomeCategory[]> {
   try {
-    const data = await shopifyFetch<ShopifyFeaturedProductResponse>({
-      query: getFeaturedProductQuery,
+    const data = await shopifyFetch<ShopifyFeaturedProductsResponse>({
+      query: getFeaturedProductsQuery,
       variables: { handle: FEATURED_COLLECTION_HANDLE },
     });
-    return toHomeFeaturedCategory(data);
+    return toHomeFeaturedCategories(data);
   } catch {
-    return null;
+    return [];
   }
 }
 

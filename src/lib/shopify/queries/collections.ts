@@ -1,7 +1,7 @@
-export const getFeaturedProductQuery = /* GraphQL */ `
-  query getFeaturedProduct($handle: String!) {
+export const getFeaturedProductsQuery = /* GraphQL */ `
+  query getFeaturedProducts($handle: String!) {
     collection(handle: $handle) {
-      products(first: 1) {
+      products(first: 4) {
         nodes {
           handle
           title

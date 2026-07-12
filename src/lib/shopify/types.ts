@@ -23,8 +23,8 @@ export interface ShopifyImage {
   height: number;
 }
 
-/** Respuesta cruda de getFeaturedProductQuery (collections.ts). */
-export interface ShopifyFeaturedProductResponse {
+/** Respuesta cruda de getFeaturedProductsQuery (collections.ts). */
+export interface ShopifyFeaturedProductsResponse {
   collection: {
     products: {
       nodes: Array<{

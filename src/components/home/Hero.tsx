@@ -13,7 +13,10 @@ export function Hero() {
   };
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden">
+    // En mobile la altura descuenta TopBar+Navbar (~6rem) y usa svh (altura
+    // visible con la barra del navegador desplegada) para que los CTAs
+    // queden siempre dentro del primer pantallazo.
+    <section className="relative w-full min-h-[calc(100svh-6rem)] md:min-h-screen overflow-hidden">
       {/* Desktop: 3 imágenes en grid */}
       <div className="hidden md:grid absolute inset-0 grid-cols-3">
         <div className="relative h-full w-full">
@@ -64,7 +67,7 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-black/40" />
 
       {/* Contenido superpuesto */}
-      <div className="relative z-10 flex min-h-screen flex-col justify-end px-6 md:px-8 pb-40 md:pb-40 pt-32">
+      <div className="relative z-10 flex min-h-[calc(100svh-6rem)] md:min-h-screen flex-col justify-end px-6 md:px-8 pb-14 md:pb-40 pt-32">
         {/* Heading */}
         <h1 style={headingStyle}>
           Ropa personalizada <br className="hidden md:block" />
