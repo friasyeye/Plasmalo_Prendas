@@ -48,6 +48,51 @@ export function getUnitPriceForQuantity(
 }
 
 /**
+ * Ahorro por alcanzar el siguiente tramo de precio.
+ *
+ * savings es el ahorro EN DINERO sobre el pedido completo (manual de pricing,
+ * punto 2: dinero, nunca porcentajes): comprar nextTier.minQuantity unidades
+ * al precio del tramo siguiente frente a comprarlas al precio actual.
+ *
+ * La personalización no entra en el cálculo: es un coste fijo por unidad que
+ * aparece igual en ambos escenarios y se cancela. Por eso el mismo helper vale
+ * para una sola línea (configurador) y para las unidades agregadas de un
+ * producto con personalizaciones distintas por línea (carrito).
+ */
+export interface NextTierSavings {
+  /** Unidades que faltan para entrar en el siguiente tramo. */
+  unitsNeeded: number;
+  /** Ahorro en euros sobre el pedido completo al alcanzarlo. */
+  savings: number;
+}
+
+export function getNextTierSavings(
+  tiers: PriceTier[],
+  quantity: number
+): NextTierSavings | null {
+  const sorted = [...tiers].sort((a, b) => a.minQuantity - b.minQuantity);
+  const nextTier = sorted.find((tier) => tier.minQuantity > quantity);
+  if (!nextTier) return null;
+
+  const currentUnitPrice = getUnitPriceForQuantity(sorted, quantity);
+  const savings = (currentUnitPrice - nextTier.unitPrice) * nextTier.minQuantity;
+  if (savings <= 0) return null;
+
+  return { unitsNeeded: nextTier.minQuantity - quantity, savings };
+}
+
+/**
+ * Redondea un importe a céntimos (2 decimales). Los precios con IVA se
+ * redondean POR UNIDAD antes de multiplicar por la cantidad, porque así es
+ * como cobra Shopify (el priceOverride del checkout es un precio unitario
+ * con 2 decimales): redondear igual aquí garantiza que la web y el checkout
+ * muestran exactamente el mismo total.
+ */
+export function roundToCents(amount: number): number {
+  return Math.round(amount * 100) / 100;
+}
+
+/**
  * Precio total de un pedido: prenda según tramo + personalización fija,
  * multiplicado por la cantidad.
  */

@@ -7,6 +7,7 @@ import { ProductGallery } from "./ProductGallery";
 import { ProductConfigurator } from "./ProductConfigurator";
 
 interface ProductViewProps {
+  productHandle: string;
   title: string;
   description: string;
   featuredImage?: ProductImage;
@@ -23,6 +24,7 @@ interface ProductViewProps {
  * cambia la galería entera y se vuelve a la primera foto.
  */
 export function ProductView({
+  productHandle,
   title,
   description,
   featuredImage,
@@ -84,6 +86,7 @@ export function ProductView({
       </div>
 
       <ProductConfigurator
+        productHandle={productHandle}
         title={title}
         description={description}
         priceTiers={priceTiers}

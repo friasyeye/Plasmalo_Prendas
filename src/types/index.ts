@@ -55,3 +55,40 @@ export interface ProductImage {
   width: number;
   height: number;
 }
+
+/** Una zona de personalización aplicada a una línea del carrito. */
+export interface CartCustomization {
+  zone: string;
+  /** Precio fijo por unidad, en euros (nunca cambia con la cantidad). */
+  unitPrice: number;
+}
+
+/**
+ * Una línea del carrito: producto + variante (color/talla) + zonas de
+ * personalización. Dos añadidos con la misma combinación se fusionan en una
+ * sola línea (su `id` es determinista a partir de variante + zonas).
+ *
+ * El tramo de descuento NO se guarda aquí: se recalcula siempre sumando las
+ * unidades de todas las líneas del mismo producto (ver lib/cart/cart.ts).
+ * `priceTiers` es una copia de la tabla del producto para poder recalcular
+ * sin volver a consultar Shopify.
+ */
+export interface CartLine {
+  id: string;
+  productHandle: string;
+  productTitle: string;
+  variantId: string;
+  /** p. ej. { Color: "Rojo", Talla: "M" } */
+  selectedOptions: Record<string, string>;
+  image: ProductImage | null;
+  quantity: number;
+  customizations: CartCustomization[];
+  priceTiers: PriceTier[];
+  /**
+   * Solo el nombre del archivo de diseño, como referencia visual: el File no
+   * puede persistirse en localStorage. El archivo real se recogerá en el
+   * paso de pedido (fuera del alcance del carrito).
+   */
+  designFileName: string | null;
+  notes: string;
+}

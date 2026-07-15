@@ -40,6 +40,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           </nav>
 
           <ProductView
+            productHandle={product.handle}
             title={product.title}
             description={product.description}
             featuredImage={product.featuredImage}

@@ -7,10 +7,12 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { CartIcon } from "@/components/icons/CartIcon";
 import { navCategories } from "@/config/site";
+import { useCart } from "@/hooks/use-cart";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { pricing, openCart } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,11 +69,12 @@ export function Navbar() {
         {/* Right side: cart */}
         <div className="flex items-center gap-4 md:gap-6">
           <button
-            aria-label="Carrito"
+            aria-label="Abrir carrito"
+            onClick={openCart}
             className="flex items-center text-black hover:opacity-70 transition-opacity"
           >
             <CartIcon size={20} />
-            <span className="text-sm ml-0.5">0</span>
+            <span className="text-sm ml-0.5">{pricing.totalUnits}</span>
           </button>
         </div>
       </div>

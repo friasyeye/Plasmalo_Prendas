@@ -31,3 +31,17 @@ export function getShopifyConfig() {
     apiVersion: "2026-04",
   };
 }
+
+/**
+ * Config de la Admin API (Draft Orders / checkout). El token es SECRETO:
+ * solo debe usarse desde código server-side (API routes, server components),
+ * nunca en un client component ni exponerse como NEXT_PUBLIC_.
+ */
+export function getShopifyAdminConfig() {
+  return {
+    storeDomain: requireEnv("SHOPIFY_STORE_DOMAIN"),
+    /** Admin API access token (app personalizada, scope write_draft_orders) */
+    adminAccessToken: requireEnv("SHOPIFY_ADMIN_ACCESS_TOKEN"),
+    apiVersion: "2026-04",
+  };
+}

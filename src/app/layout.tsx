@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 import "./globals.css";
 
 const generalSans = localFont({
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="es" className={`${generalSans.variable} ${satoshi.variable}`}>
       <body className="min-h-full">
         {children}
+        <CartDrawer />
       </body>
     </html>
   );

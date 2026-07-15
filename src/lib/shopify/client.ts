@@ -88,11 +88,19 @@ export async function getFeaturedProducts(): Promise<HomeCategory[]> {
  * Producto completo para /product/[handle], incluyendo su tabla de tramos
  * de precio (leída del metaobjeto enlazado vía el metacampo
  * custom.tabla_de_precios). Devuelve null si el producto no existe.
+ *
+ * `revalidate` opcional: el checkout lo llama con 0 (datos frescos, sin
+ * caché) porque para COBRAR los tramos deben ser los actuales; el ISR de 2h
+ * solo vale para pintar páginas.
  */
-export async function getProduct(handle: string): Promise<Product | null> {
+export async function getProduct(
+  handle: string,
+  options?: { revalidate?: number }
+): Promise<Product | null> {
   const data = await shopifyFetch<ShopifyProductResponse>({
     query: getProductQuery,
     variables: { handle },
+    revalidate: options?.revalidate,
   });
   return toProduct(data);
 }

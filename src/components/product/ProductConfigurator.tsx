@@ -8,9 +8,14 @@ import { IVA_RATE } from "@/config/pricing";
 import {
   getUnitPriceForQuantity,
   calculateOrderTotal,
+  getNextTierSavings,
 } from "@/lib/pricing/tiered-pricing";
+import { formatEUR } from "@/lib/format";
+import { useCart } from "@/hooks/use-cart";
 
 interface ProductConfiguratorProps {
+  /** Handle del producto: identidad de línea y agregación de tramos en el carrito. */
+  productHandle: string;
   title: string;
   description: string;
   priceTiers: PriceTier[];
@@ -22,13 +27,6 @@ interface ProductConfiguratorProps {
   onSelectOption: (name: string, value: string) => void;
 }
 
-function formatEUR(amount: number): string {
-  return amount.toLocaleString("es-ES", {
-    style: "currency",
-    currency: "EUR",
-  });
-}
-
 const ACCEPTED_DESIGN_TYPES = [
   "image/png",
   "application/pdf",
@@ -38,6 +36,7 @@ const ACCEPTED_DESIGN_TYPES = [
 const MAX_DESIGN_FILE_SIZE_MB = 20;
 
 export function ProductConfigurator({
+  productHandle,
   title,
   description,
   priceTiers,
@@ -47,8 +46,15 @@ export function ProductConfigurator({
   selectedOptions,
   onSelectOption,
 }: ProductConfiguratorProps) {
+  const { addToCart, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [selectedZones, setSelectedZones] = useState<string[]>([]);
+  const [selectedZones, setSelectedZones] = useState<string[]>(() => {
+    if (customizations.length === 0) return [];
+    const cheapest = customizations.reduce((min, c) =>
+      c.unitPrice < min.unitPrice ? c : min
+    );
+    return [cheapest.zone];
+  });
   const [designFile, setDesignFile] = useState<File | null>(null);
   const [designError, setDesignError] = useState<string | null>(null);
   const [isDraggingFile, setIsDraggingFile] = useState(false);
@@ -61,10 +67,6 @@ export function ProductConfigurator({
       ([name, value]) => variant.selectedOptions[name] === value
     )
   );
-
-  function selectOption(name: string, value: string) {
-    onSelectOption(name, value);
-  }
 
   function findVariantImage(optionName: string, value: string) {
     const matches = variants.filter((variant) => variant.selectedOptions[optionName] === value);
@@ -124,27 +126,37 @@ export function ProductConfigurator({
   });
   const orderTotalWithIva = orderTotal * (1 + IVA_RATE);
 
-  const nextTier = sortedTiers.find((t) => t.minQuantity > quantity);
-  let savingsInfo: { unitsNeeded: number; savings: number } | null = null;
-  if (nextTier) {
-    const unitsNeeded = nextTier.minQuantity - quantity;
-    const totalAtNextTier = calculateOrderTotal({
-      tiers: sortedTiers,
-      quantity: nextTier.minQuantity,
-      customizationUnitPrice,
+  const savingsInfo = getNextTierSavings(sortedTiers, quantity);
+
+  const canAddToCart = Boolean(selectedVariant?.availableForSale);
+
+  function handleAddToCart() {
+    if (!selectedVariant?.availableForSale) return;
+    addToCart({
+      productHandle,
+      productTitle: title,
+      variantId: selectedVariant.id,
+      selectedOptions: { ...selectedOptions },
+      image: selectedVariant.image ?? variants.find((v) => v.image)?.image ?? null,
+      quantity,
+      customizations: customizations.filter((c) =>
+        selectedZones.includes(c.zone)
+      ),
+      priceTiers: sortedTiers,
+      designFileName: designFile?.name ?? null,
+      notes: notes.trim(),
     });
-    const currentTotalAtThatQuantity =
-      unitTotal * nextTier.minQuantity;
-    const savings = currentTotalAtThatQuantity - totalAtNextTier;
-    if (savings > 0) {
-      savingsInfo = { unitsNeeded, savings };
-    }
+    openCart();
   }
 
   function toggleZone(zone: string) {
-    setSelectedZones((prev) =>
-      prev.includes(zone) ? prev.filter((z) => z !== zone) : [...prev, zone]
-    );
+    setSelectedZones((prev) => {
+      if (prev.includes(zone)) {
+        if (prev.length === 1) return prev;
+        return prev.filter((z) => z !== zone);
+      }
+      return [...prev, zone];
+    });
   }
 
   return (
@@ -156,7 +168,7 @@ export function ProductConfigurator({
         <p className="text-gray-600 text-sm leading-relaxed max-w-md mb-3">
           {description}
         </p>
-        <p className="font-display font-semibold text-black text-2xl">
+        <p className="font-display font-semibold text-black text-lg">
           {formatEUR(unitTotal)} <span className="text-gray-400 text-sm font-normal">+ IVA</span>
         </p>
         <p className="text-gray-400 text-xs">
@@ -167,9 +179,12 @@ export function ProductConfigurator({
       <div className="space-y-6">
         {/* 1. Personalización */}
         <div>
-          <h3 className="text-gray-900 text-[11px] font-medium mb-3 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-[11px] font-medium mb-1 uppercase tracking-[0.12em]">
             Personalización
           </h3>
+          <p className="text-xs text-gray-400 mb-3">
+            Selecciona al menos una personalización
+          </p>
           <div className="flex flex-col">
             {customizations.map((c) => {
               const active = selectedZones.includes(c.zone);
@@ -179,23 +194,39 @@ export function ProductConfigurator({
                   type="button"
                   onClick={() => toggleZone(c.zone)}
                   className={
-                    "flex items-center justify-between py-2.5 border-b text-sm transition-colors duration-200 " +
+                    "flex items-center justify-between gap-3 py-2.5 border-b text-sm transition-colors duration-200 " +
                     (active
                       ? "border-black"
                       : "border-gray-200 hover:border-gray-400")
                   }
                 >
-                  <span
-                    className={
-                      "transition-colors duration-200 " +
-                      (active
-                        ? "text-black font-semibold"
-                        : "text-gray-500 font-medium hover:text-black")
-                    }
-                  >
-                    {c.zone}
+                  <span className="flex items-center gap-3 min-w-0">
+                    <span
+                      className={
+                        "relative shrink-0 w-11 h-11 overflow-hidden bg-white border transition-colors duration-200 " +
+                        (active ? "border-black" : "border-gray-200")
+                      }
+                    >
+                      <Image
+                        src={c.image}
+                        alt={c.zone}
+                        fill
+                        sizes="44px"
+                        className="object-contain"
+                      />
+                    </span>
+                    <span
+                      className={
+                        "truncate transition-colors duration-200 " +
+                        (active
+                          ? "text-black font-semibold"
+                          : "text-gray-500 font-medium hover:text-black")
+                      }
+                    >
+                      {c.zone}
+                    </span>
                   </span>
-                  <span className={active ? "text-black" : "text-gray-400"}>
+                  <span className={"shrink-0 " + (active ? "text-black" : "text-gray-400")}>
                     +{formatEUR(c.unitPrice)}
                   </span>
                 </button>
@@ -277,7 +308,7 @@ export function ProductConfigurator({
                         key={value}
                         type="button"
                         aria-label={value}
-                        onClick={() => selectOption(option.name, value)}
+                        onClick={() => onSelectOption(option.name, value)}
                         className={
                           "pb-1.5 border-b transition-colors duration-200 " +
                           (active
@@ -332,7 +363,7 @@ export function ProductConfigurator({
                       <button
                         key={value}
                         type="button"
-                        onClick={() => selectOption(option.name, value)}
+                        onClick={() => onSelectOption(option.name, value)}
                         className={
                           "pb-1 border-b transition-colors duration-200 " +
                           (active
@@ -358,7 +389,7 @@ export function ProductConfigurator({
                     <button
                       key={value}
                       type="button"
-                      onClick={() => selectOption(option.name, value)}
+                      onClick={() => onSelectOption(option.name, value)}
                       className={
                         "pb-1 border-b transition-colors duration-200 " +
                         (active
@@ -478,13 +509,13 @@ export function ProductConfigurator({
             </button>
           </div>
           {savingsInfo && (
-            <p className="text-xs text-gray-600 mt-2.5">
+            <p className="border-l-2 border-black pl-2.5 mt-3.5 text-xs text-gray-600 leading-relaxed transition-opacity duration-200">
               Añade {savingsInfo.unitsNeeded} unidad
               {savingsInfo.unitsNeeded > 1 ? "es" : ""} más y ahorrarás{" "}
-              <strong className="font-semibold text-black">
+              <span className="font-semibold text-black">
                 {formatEUR(savingsInfo.savings)}
-              </strong>{" "}
-              en este pedido.
+              </span>{" "}
+              en este pedido
             </p>
           )}
         </div>
@@ -536,9 +567,9 @@ export function ProductConfigurator({
 
         <button
           type="button"
-          disabled
-          title="Disponible próximamente"
-          className="hidden md:block w-full bg-black text-white rounded-full py-3.5 font-medium text-sm transition-colors duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed mt-4"
+          disabled={!canAddToCart}
+          onClick={handleAddToCart}
+          className="hidden md:block w-full bg-black text-white rounded-full py-3.5 font-medium text-sm transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed mt-4"
         >
           Añadir a la cesta
         </button>
@@ -546,7 +577,7 @@ export function ProductConfigurator({
       </div>
 
       {/* CTA fijo en mobile */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 px-4 py-3 flex items-center gap-3">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex items-center gap-4">
         <div className="flex-1 min-w-0">
           <p className="text-[11px] text-gray-500 truncate">
             {quantity} ud{quantity > 1 ? "s" : ""} ·{" "}
@@ -558,9 +589,9 @@ export function ProductConfigurator({
         </div>
         <button
           type="button"
-          disabled
-          title="Disponible próximamente"
-          className="bg-black text-white rounded-full py-3 px-6 font-medium text-sm transition-colors duration-200 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+          disabled={!canAddToCart}
+          onClick={handleAddToCart}
+          className="bg-black text-white rounded-full py-3 px-6 font-medium text-sm transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
         >
           Añadir a la cesta
         </button>

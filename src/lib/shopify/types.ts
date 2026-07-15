@@ -75,6 +75,43 @@ export interface ShopifyProductOption {
   optionValues: Array<{ name: string }>;
 }
 
+/** Un atributo clave/valor de una línea del draft order (Admin API). */
+export interface ShopifyAttributeInput {
+  key: string;
+  value: string;
+}
+
+/** Una línea de draftOrderCreate: variante real + precio custom por unidad. */
+export interface ShopifyDraftOrderLineItemInput {
+  variantId: string;
+  quantity: number;
+  /** Precio unitario custom. La tienda tiene "IVA incluido en el precio"
+   *  activado, así que este importe debe llevar el IVA DENTRO. */
+  priceOverride: {
+    amount: string;
+    currencyCode: string;
+  };
+  customAttributes: ShopifyAttributeInput[];
+}
+
+/** Variables de draftOrderCreate (draft-order.ts). */
+export interface ShopifyDraftOrderInput {
+  lineItems: ShopifyDraftOrderLineItemInput[];
+  note: string;
+  tags: string[];
+}
+
+/** Respuesta cruda de draftOrderCreateMutation (Admin API). */
+export interface ShopifyDraftOrderCreateResponse {
+  draftOrderCreate: {
+    draftOrder: {
+      id: string;
+      invoiceUrl: string | null;
+    } | null;
+    userErrors: Array<{ field: string[] | null; message: string }>;
+  };
+}
+
 /** Respuesta cruda de getProductQuery (product.ts). */
 export interface ShopifyProductResponse {
   product: {
