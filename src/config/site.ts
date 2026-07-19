@@ -7,12 +7,9 @@
  * lib/shopify) sin tocar ningún componente visual.
  */
 
-export const navCategories = [
-  "Camisetas",
-  "Sudaderas",
-  "Polos",
-  "Merchandising",
-];
+export const navPrendas = ["Camisetas", "Sudaderas", "Gorras"];
+
+export const navMerchandising = ["Bolsas y tote bags", "Botellas y tazas"];
 
 export const topBarMessages = [
   "Sin pedido mínimo",

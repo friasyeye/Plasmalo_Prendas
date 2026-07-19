@@ -21,9 +21,52 @@ export interface HomeCategory {
  * de Shopify y rellena con estos placeholders hasta completar 4 tarjetas.
  */
 export const placeholderHomeCategories: HomeCategory[] = [
-  { name: "Sudadera", img: "/fabfit/category-accessories.png" },
-  { name: "Polo", img: "/fabfit/category-sports.png" },
-  { name: "Gorra", img: "/fabfit/product-grey-comfort.png" },
+  { name: "Sudaderas", img: "/fabfit/category-accessories.png" },
+  { name: "Gorras", img: "/fabfit/category-sports.png" },
+  { name: "Bolsas y tote bags", img: "/fabfit/product-grey-comfort.png" },
+  { name: "Botellas y tazas", img: "/fabfit/product-grey-comfort.png" },
+];
+
+export interface Sector {
+  name: string;
+  img: string;
+  /** Texto corto mostrado sobre la imagen. */
+  tagline: string;
+  /** Slug de /sectores/[slug]. */
+  slug: string;
+}
+
+export const sectors: Sector[] = [
+  {
+    name: "Restaurantes",
+    img: "/images/restaurantes.png",
+    tagline: "Uniformes que resisten el turno",
+    slug: "restaurantes",
+  },
+  {
+    name: "Gimnasios",
+    img: "/images/gimnasios.png",
+    tagline: "Equipación técnica con tu marca",
+    slug: "gimnasios",
+  },
+  {
+    name: "Constructores",
+    img: "/images/Construcción.png",
+    tagline: "Ropa laboral certificada",
+    slug: "constructores",
+  },
+  {
+    name: "Eventos",
+    img: "/images/eventos.png",
+    tagline: "Tu equipo, identificado y con marca",
+    slug: "eventos",
+  },
+  {
+    name: "Oficinas",
+    img: "/images/oficina.png",
+    tagline: "Imagen de marca cada día",
+    slug: "oficinas",
+  },
 ];
 
 export interface Testimonial {

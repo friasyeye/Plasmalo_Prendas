@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export function Hero() {
   const headingStyle: React.CSSProperties = {
@@ -70,17 +71,18 @@ export function Hero() {
       <div className="relative z-10 flex min-h-[calc(100svh-6rem)] md:min-h-screen flex-col justify-end px-6 md:px-8 pb-14 md:pb-40 pt-32">
         {/* Heading */}
         <h1 style={headingStyle}>
-          Ropa personalizada <br className="hidden md:block" />
-          que marca la diferencia
+          Tu marca merece mucho más <br className="hidden md:block" />
+          que ropa personalizada
         </h1>
         {/* Buttons */}
         <div style={{ marginTop: "24px" }} className="flex items-start gap-2 md:gap-3">
-          <button
+          <Link
+            href="/prendas"
             style={{ fontFamily: "var(--font-satoshi)" }}
-            className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors"
+            className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors text-center"
           >
             Elige tu prenda
-          </button>
+          </Link>
           <a
             href="https://wa.me/?text=Hola,%20me%20gustaría%20solicitar%20un%20mockup%20gratis"
             target="_blank"

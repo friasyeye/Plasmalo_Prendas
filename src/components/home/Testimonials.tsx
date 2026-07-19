@@ -3,8 +3,8 @@ import { testimonials } from "@/config/home";
 
 export function Testimonials() {
   return (
-    <section className="bg-[#FAFAFA] px-4 md:px-8 py-16 min-h-screen flex flex-col justify-center">
-      <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20 -mt-16 md:-mt-24">
+    <section className="bg-[#FAFAFA] px-4 md:px-8 pt-16 pb-8 md:pb-10">
+      <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20">
         <p
           className="text-black mb-5"
           style={{
