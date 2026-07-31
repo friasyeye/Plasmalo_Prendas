@@ -7,9 +7,26 @@
  * lib/shopify) sin tocar ningún componente visual.
  */
 
-export const navPrendas = ["Camisetas", "Sudaderas", "Gorras"];
+export const navPrendas = [
+  "Camiseta",
+  "Polo",
+  "Sudadera",
+  "Camisa",
+  "Jersey",
+  "Chaqueta/Chaleco",
+  "Gorra/Gorro",
+];
 
-export const navMerchandising = ["Bolsas y tote bags", "Botellas y tazas"];
+export const navMerchandising = [
+  "Bolsas",
+  "Mochilas",
+  "Libretas",
+  "Escritura",
+  "Botellas/Termo",
+  "Tazas",
+  "Lanyards",
+  "Llaveros",
+];
 
 export const topBarMessages = [
   "Sin pedido mínimo",

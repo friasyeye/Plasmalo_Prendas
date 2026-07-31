@@ -5,7 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProductView } from "@/components/product/ProductView";
 import { getProduct } from "@/lib/shopify/client";
-import { camisetaCustomizations } from "@/config/pricing";
+import { camisetaCustomizations, camisetaDetails } from "@/config/pricing";
 
 interface ProductPageProps {
   params: Promise<{ handle: string }>;
@@ -46,6 +46,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
             featuredImage={product.featuredImage}
             priceTiers={product.priceTiers}
             customizations={camisetaCustomizations}
+            details={camisetaDetails}
             options={product.options}
             variants={product.variants}
           />

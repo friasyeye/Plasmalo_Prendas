@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import type { PriceTier, ProductOption, ProductVariant } from "@/types";
-import type { Customization } from "@/config/pricing";
+import type { Customization, ProductDetailSection } from "@/config/pricing";
 import { IVA_RATE } from "@/config/pricing";
 import {
   getUnitPriceForQuantity,
@@ -20,6 +21,7 @@ interface ProductConfiguratorProps {
   description: string;
   priceTiers: PriceTier[];
   customizations: Customization[];
+  details: ProductDetailSection[];
   options: ProductOption[];
   variants: ProductVariant[];
   /** Opciones seleccionadas (Talla, Color…); las gestiona ProductView. */
@@ -41,6 +43,7 @@ export function ProductConfigurator({
   description,
   priceTiers,
   customizations,
+  details,
   options,
   variants,
   selectedOptions,
@@ -48,6 +51,7 @@ export function ProductConfigurator({
 }: ProductConfiguratorProps) {
   const { addToCart, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
+  const [openDetail, setOpenDetail] = useState<string | null>(null);
   const [selectedZones, setSelectedZones] = useState<string[]>(() => {
     if (customizations.length === 0) return [];
     const cheapest = customizations.reduce((min, c) =>
@@ -162,16 +166,16 @@ export function ProductConfigurator({
   return (
     <div className="flex flex-col bg-[#F4F4F4] p-5 md:p-6">
       <div className="pb-5 mb-5 border-b border-gray-200">
-        <h1 className="font-display font-semibold text-black text-xl md:text-2xl mb-1 leading-tight tracking-tight">
+        <h1 className="font-display font-semibold text-black text-2xl md:text-3xl mb-1 leading-tight tracking-tight">
           {title}
         </h1>
-        <p className="text-gray-600 text-sm leading-relaxed max-w-md mb-3">
+        <p className="text-gray-600 text-base leading-relaxed max-w-md mb-3">
           {description}
         </p>
-        <p className="font-display font-semibold text-black text-lg">
-          {formatEUR(unitTotal)} <span className="text-gray-400 text-sm font-normal">+ IVA</span>
+        <p className="font-display font-semibold text-black text-xl">
+          {formatEUR(unitTotal)} <span className="text-gray-400 text-base font-normal">+ IVA</span>
         </p>
-        <p className="text-gray-400 text-xs">
+        <p className="text-gray-400 text-sm">
           {formatEUR(unitTotal * (1 + IVA_RATE))} IVA incluido
         </p>
       </div>
@@ -179,13 +183,13 @@ export function ProductConfigurator({
       <div className="space-y-6">
         {/* 1. Personalización */}
         <div>
-          <h3 className="text-gray-900 text-[11px] font-medium mb-1 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-xs font-medium mb-1 uppercase tracking-[0.12em]">
             Personalización
           </h3>
-          <p className="text-xs text-gray-400 mb-3">
+          <p className="text-sm text-gray-400 mb-3">
             Selecciona al menos una personalización
           </p>
-          <div className="flex flex-col">
+          <div className="grid grid-cols-2 gap-x-4">
             {customizations.map((c) => {
               const active = selectedZones.includes(c.zone);
               return (
@@ -194,37 +198,30 @@ export function ProductConfigurator({
                   type="button"
                   onClick={() => toggleZone(c.zone)}
                   className={
-                    "flex items-center justify-between gap-3 py-2.5 border-b text-sm transition-colors duration-200 " +
+                    "flex items-center gap-2 py-2.5 border-b text-base transition-colors duration-200 " +
                     (active
                       ? "border-black"
                       : "border-gray-200 hover:border-gray-400")
                   }
                 >
-                  <span className="flex items-center gap-3 min-w-0">
-                    <span
-                      className={
-                        "relative shrink-0 w-11 h-11 overflow-hidden bg-white border transition-colors duration-200 " +
-                        (active ? "border-black" : "border-gray-200")
-                      }
-                    >
-                      <Image
-                        src={c.image}
-                        alt={c.zone}
-                        fill
-                        sizes="44px"
-                        className="object-contain"
-                      />
-                    </span>
-                    <span
-                      className={
-                        "truncate transition-colors duration-200 " +
-                        (active
-                          ? "text-black font-semibold"
-                          : "text-gray-500 font-medium hover:text-black")
-                      }
-                    >
-                      {c.zone}
-                    </span>
+                  <span className="relative shrink-0 w-20 h-20 overflow-hidden">
+                    <Image
+                      src={c.image}
+                      alt={c.zone}
+                      fill
+                      sizes="80px"
+                      className="object-contain"
+                    />
+                  </span>
+                  <span
+                    className={
+                      "truncate transition-colors duration-200 " +
+                      (active
+                        ? "text-black font-semibold"
+                        : "text-gray-500 font-medium hover:text-black")
+                    }
+                  >
+                    {c.zone}
                   </span>
                   <span className={"shrink-0 " + (active ? "text-black" : "text-gray-400")}>
                     +{formatEUR(c.unitPrice)}
@@ -237,10 +234,10 @@ export function ProductConfigurator({
 
         {/* 2. Sube tu diseño */}
         <div>
-          <h3 className="text-gray-900 text-[11px] font-medium mb-1 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-xs font-medium mb-1 uppercase tracking-[0.12em]">
             Sube tu diseño
           </h3>
-          <p className="text-xs text-gray-400 mb-3">
+          <p className="text-sm text-gray-400 mb-3">
             PNG, PDF, AI, EPS o SVG · máx. {MAX_DESIGN_FILE_SIZE_MB}MB
           </p>
           <label
@@ -269,10 +266,10 @@ export function ProductConfigurator({
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M12 12v9m0-9l-3 3m3-3l3 3" />
                 </svg>
               )}
-              <p className={"text-sm font-medium " + (designFile ? "text-black" : "text-gray-700")}>
+              <p className={"text-base font-medium " + (designFile ? "text-black" : "text-gray-700")}>
                 {designFile ? designFile.name : "Arrastra tu archivo aquí"}
               </p>
-              <p className="text-xs text-gray-400 mt-0.5">
+              <p className="text-sm text-gray-400 mt-0.5">
                 {designFile ? "Haz clic para cambiar el archivo" : "o haz clic para seleccionar"}
               </p>
             </div>
@@ -284,7 +281,7 @@ export function ProductConfigurator({
             />
           </label>
           {designError && (
-            <p className="text-xs text-red-600 mt-2 font-medium">✗ {designError}</p>
+            <p className="text-sm text-red-600 mt-2 font-medium">✗ {designError}</p>
           )}
         </div>
 
@@ -296,7 +293,7 @@ export function ProductConfigurator({
           if (isColorOption) {
             return (
               <div key={option.name}>
-                <h3 className="text-black text-sm font-medium mb-3">
+                <h3 className="text-black text-base font-medium mb-3">
                   {selectedOptions[option.name] ?? option.name}
                 </h3>
                 <div className="flex flex-wrap gap-2.5">
@@ -326,7 +323,7 @@ export function ProductConfigurator({
                               className="object-cover"
                             />
                           ) : (
-                            <span className="w-full h-full flex items-center justify-center bg-gray-100 text-[10px] text-gray-500">
+                            <span className="w-full h-full flex items-center justify-center bg-gray-100 text-[11px] text-gray-500">
                               {value.slice(0, 2)}
                             </span>
                           )}
@@ -342,13 +339,13 @@ export function ProductConfigurator({
           return (
             <div key={option.name}>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-gray-900 text-[11px] font-medium uppercase tracking-[0.12em]">
+                <h3 className="text-gray-900 text-xs font-medium uppercase tracking-[0.12em]">
                   {option.name}
                 </h3>
                 {isSizeOption && (
                   <button
                     type="button"
-                    className="text-xs text-gray-500 underline underline-offset-4 decoration-gray-400 hover:text-black hover:decoration-black transition-colors duration-200"
+                    className="text-sm text-gray-500 underline underline-offset-4 decoration-gray-400 hover:text-black hover:decoration-black transition-colors duration-200"
                   >
                     Guía de tallas
                   </button>
@@ -373,7 +370,7 @@ export function ProductConfigurator({
                       >
                         <span
                           className={
-                            "w-10 h-10 text-sm flex items-center justify-center transition-colors duration-200 " +
+                            "w-10 h-10 text-base flex items-center justify-center transition-colors duration-200 " +
                             (active
                               ? "text-black font-semibold"
                               : "text-gray-500 font-medium hover:text-black")
@@ -399,7 +396,7 @@ export function ProductConfigurator({
                     >
                       <span
                         className={
-                          "h-10 px-1 text-sm flex items-center justify-center transition-colors duration-200 " +
+                          "h-10 px-1 text-base flex items-center justify-center transition-colors duration-200 " +
                           (active
                             ? "text-black font-semibold"
                             : "text-gray-500 font-medium hover:text-black")
@@ -415,9 +412,45 @@ export function ProductConfigurator({
           );
         })}
 
+        {/* Composición, estilo y cuidado */}
+        {details.length > 0 && (
+          <div className="border-t border-gray-200 pt-1">
+            {details.map((section) => {
+              const open = openDetail === section.title;
+              return (
+                <div key={section.title} className="border-b border-gray-200">
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => setOpenDetail(open ? null : section.title)}
+                    className="flex items-center justify-between w-full py-3 text-base font-medium text-black"
+                  >
+                    {section.title}
+                    <ChevronDown
+                      size={16}
+                      className={
+                        "transition-transform duration-200 " + (open ? "rotate-180" : "")
+                      }
+                    />
+                  </button>
+                  {open && (
+                    <ul className="pb-3 space-y-1">
+                      {section.items.map((item) => (
+                        <li key={item} className="text-base text-gray-600 leading-relaxed">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
         {selectedVariant && !selectedVariant.availableForSale && (
           <div className="bg-red-50 border border-red-200 rounded-none p-3">
-            <p className="text-xs text-red-700">
+            <p className="text-sm text-red-700">
               Esta combinación no está disponible actualmente.
             </p>
           </div>
@@ -425,11 +458,11 @@ export function ProductConfigurator({
 
         {/* 5. Observaciones */}
         <div>
-          <h3 className="text-gray-900 text-[11px] font-medium mb-1 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-xs font-medium mb-1 uppercase tracking-[0.12em]">
             Observaciones{" "}
             <span className="normal-case text-gray-400 font-normal">(opcional)</span>
           </h3>
-          <p className="text-xs text-gray-400 mb-3">
+          <p className="text-sm text-gray-400 mb-3">
             ¿Algo que debamos tener en cuenta con tu pedido?
           </p>
           <textarea
@@ -437,15 +470,15 @@ export function ProductConfigurator({
             onChange={(e) => setNotes(e.target.value.slice(0, MAX_NOTES_LENGTH))}
             placeholder="Ej: el logo en un tono más oscuro, tallas por unidad…"
             rows={3}
-            className="w-full px-3 py-2.5 rounded-none border border-gray-300 bg-white text-sm text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors duration-200 resize-none"
+            className="w-full px-3 py-2.5 rounded-none border border-gray-300 bg-white text-base text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors duration-200 resize-none"
           />
-          <p className="text-[11px] text-gray-400 mt-1 text-right">
+          <p className="text-xs text-gray-400 mt-1 text-right">
             {notes.length}/{MAX_NOTES_LENGTH}
           </p>
         </div>
 
         <div>
-          <h3 className="text-gray-900 text-[11px] font-medium mb-3 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-xs font-medium mb-3 uppercase tracking-[0.12em]">
             Cantidad
           </h3>
 
@@ -467,7 +500,7 @@ export function ProductConfigurator({
                   >
                     <span
                       className={
-                        "min-w-8 sm:min-w-10 h-10 px-0.5 sm:px-1 text-sm flex items-center justify-center transition-colors duration-200 " +
+                        "min-w-8 sm:min-w-10 h-10 px-0.5 sm:px-1 text-base flex items-center justify-center transition-colors duration-200 " +
                         (active
                           ? "text-black font-semibold"
                           : "text-gray-500 font-medium hover:text-black")
@@ -486,7 +519,7 @@ export function ProductConfigurator({
               type="button"
               aria-label="Reducir cantidad"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-              className="w-9 h-9 rounded-full border border-gray-300 text-black hover:border-black transition-[border-color,transform] duration-200 active:scale-[0.97] flex items-center justify-center font-semibold text-sm"
+              className="w-9 h-9 rounded-full border border-gray-300 text-black hover:border-black transition-[border-color,transform] duration-200 active:scale-[0.97] flex items-center justify-center font-semibold text-base"
             >
               −
             </button>
@@ -497,19 +530,19 @@ export function ProductConfigurator({
               onChange={(e) =>
                 setQuantity(Math.max(1, Number(e.target.value) || 1))
               }
-              className="w-16 text-center border border-gray-300 rounded-full py-2 text-black font-semibold bg-transparent focus:outline-none focus:border-black text-sm [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+              className="w-16 text-center border border-gray-300 rounded-full py-2 text-black font-semibold bg-transparent focus:outline-none focus:border-black text-base [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
             <button
               type="button"
               aria-label="Aumentar cantidad"
               onClick={() => setQuantity((q) => q + 1)}
-              className="w-9 h-9 rounded-full border border-gray-300 text-black hover:border-black transition-[border-color,transform] duration-200 active:scale-[0.97] flex items-center justify-center font-semibold text-sm"
+              className="w-9 h-9 rounded-full border border-gray-300 text-black hover:border-black transition-[border-color,transform] duration-200 active:scale-[0.97] flex items-center justify-center font-semibold text-base"
             >
               +
             </button>
           </div>
           {savingsInfo && (
-            <p className="border-l-2 border-black pl-2.5 mt-3.5 text-xs text-gray-600 leading-relaxed transition-opacity duration-200">
+            <p className="border-l-2 border-black pl-2.5 mt-3.5 text-sm text-gray-600 leading-relaxed transition-opacity duration-200">
               Añade {savingsInfo.unitsNeeded} unidad
               {savingsInfo.unitsNeeded > 1 ? "es" : ""} más y ahorrarás{" "}
               <span className="font-semibold text-black">
@@ -525,11 +558,11 @@ export function ProductConfigurator({
             llegar a su posición natural. */}
         <div className="md:sticky md:bottom-0 md:bg-[#F4F4F4] md:pb-5">
         <div className="pt-5 mt-1 border-t border-gray-200 space-y-1.5">
-          <h3 className="text-gray-900 text-[11px] font-medium mb-2 uppercase tracking-[0.12em]">
+          <h3 className="text-gray-900 text-xs font-medium mb-2 uppercase tracking-[0.12em]">
             Tu pedido
           </h3>
 
-          <div className="flex items-baseline justify-between text-sm">
+          <div className="flex items-baseline justify-between text-base">
             <p className="text-gray-500">
               Cantidad
             </p>
@@ -538,7 +571,7 @@ export function ProductConfigurator({
             </p>
           </div>
 
-          <div className="flex items-baseline justify-between text-sm">
+          <div className="flex items-baseline justify-between text-base">
             <p className="text-gray-500">
               Precio unidad
               {selectedZones.length > 0 && (
@@ -552,15 +585,15 @@ export function ProductConfigurator({
           </div>
 
           <div className="flex items-baseline justify-between pt-2 mt-1 border-t border-gray-200">
-            <p className="text-gray-900 text-[11px] font-medium uppercase tracking-[0.12em]">
+            <p className="text-gray-900 text-xs font-medium uppercase tracking-[0.12em]">
               Total
             </p>
-            <p className="font-display font-semibold text-black text-2xl leading-none tracking-tight">
+            <p className="font-display font-semibold text-black text-3xl leading-none tracking-tight">
               {formatEUR(orderTotal)}{" "}
-              <span className="text-gray-400 text-sm font-normal">+ IVA</span>
+              <span className="text-gray-400 text-base font-normal">+ IVA</span>
             </p>
           </div>
-          <p className="text-right text-gray-400 text-xs">
+          <p className="text-right text-gray-400 text-sm">
             {formatEUR(orderTotalWithIva)} IVA ({Math.round(IVA_RATE * 100)}%) incluido
           </p>
         </div>
@@ -569,7 +602,7 @@ export function ProductConfigurator({
           type="button"
           disabled={!canAddToCart}
           onClick={handleAddToCart}
-          className="hidden md:block w-full bg-black text-white rounded-full py-3.5 font-medium text-sm transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed mt-4"
+          className="hidden md:block w-full bg-black text-white rounded-full py-3.5 font-medium text-base transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed mt-4"
         >
           Añadir a la cesta
         </button>
@@ -579,11 +612,11 @@ export function ProductConfigurator({
       {/* CTA fijo en mobile */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex items-center gap-4">
         <div className="flex-1 min-w-0">
-          <p className="text-[11px] text-gray-500 truncate">
+          <p className="text-xs text-gray-500 truncate">
             {quantity} ud{quantity > 1 ? "s" : ""} ·{" "}
             {formatEUR(unitTotal * (1 + IVA_RATE))}/ud · IVA incluido
           </p>
-          <p className="font-display font-semibold text-black text-lg leading-tight truncate">
+          <p className="font-display font-semibold text-black text-xl leading-tight truncate">
             {formatEUR(orderTotalWithIva)}
           </p>
         </div>
@@ -591,7 +624,7 @@ export function ProductConfigurator({
           type="button"
           disabled={!canAddToCart}
           onClick={handleAddToCart}
-          className="bg-black text-white rounded-full py-3 px-6 font-medium text-sm transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
+          className="bg-black text-white rounded-full py-3 px-6 font-medium text-base transition-colors duration-200 hover:bg-gray-800 disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed"
         >
           Añadir a la cesta
         </button>

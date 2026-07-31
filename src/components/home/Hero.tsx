@@ -76,13 +76,6 @@ export function Hero() {
         </h1>
         {/* Buttons */}
         <div style={{ marginTop: "24px" }} className="flex items-start gap-2 md:gap-3">
-          <Link
-            href="/prendas"
-            style={{ fontFamily: "var(--font-satoshi)" }}
-            className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors text-center"
-          >
-            Elige tu prenda
-          </Link>
           <a
             href="https://wa.me/?text=Hola,%20me%20gustaría%20solicitar%20un%20mockup%20gratis"
             target="_blank"
@@ -90,8 +83,15 @@ export function Hero() {
             style={{ fontFamily: "var(--font-satoshi)" }}
             className="w-fit rounded-full border border-white bg-white text-black px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-transparent hover:text-white transition-colors text-center"
           >
-            Pide tu mockup gratis
+            Diseña tu pedido
           </a>
+          <Link
+            href="/prendas"
+            style={{ fontFamily: "var(--font-satoshi)" }}
+            className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors text-center"
+          >
+            Cuéntanos tu proyecto
+          </Link>
         </div>
       </div>
     </section>

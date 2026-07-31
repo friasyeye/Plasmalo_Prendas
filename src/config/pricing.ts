@@ -21,3 +21,35 @@ export const camisetaCustomizations: Customization[] = [
 ];
 
 export const IVA_RATE = 0.21;
+
+/**
+ * Composición, estilo y cuidado de la Camiseta.
+ *
+ * TEMPORAL: contenido de ejemplo. Sustituir por los datos reales del
+ * producto (idealmente vía metafield de Shopify, mismo patrón que
+ * camisetaCustomizations) antes de lanzar.
+ */
+export interface ProductDetailSection {
+  title: string;
+  items: string[];
+}
+
+export const camisetaDetails: ProductDetailSection[] = [
+  {
+    title: "Composición",
+    items: ["100% algodón peinado", "180 g/m²", "Punto jersey"],
+  },
+  {
+    title: "Estilo",
+    items: ["Corte regular", "Cuello redondo reforzado", "Costuras dobles"],
+  },
+  {
+    title: "Cuidado",
+    items: [
+      "Lavar a máquina a 30°C",
+      "No usar lejía",
+      "Secar a la sombra",
+      "Planchar a temperatura media",
+    ],
+  },
+];

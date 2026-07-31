@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { PriceTier, ProductImage, ProductOption, ProductVariant } from "@/types";
-import type { Customization } from "@/config/pricing";
+import type { Customization, ProductDetailSection } from "@/config/pricing";
 import { ProductGallery } from "./ProductGallery";
 import { ProductConfigurator } from "./ProductConfigurator";
 
@@ -13,6 +13,7 @@ interface ProductViewProps {
   featuredImage?: ProductImage;
   priceTiers: PriceTier[];
   customizations: Customization[];
+  details: ProductDetailSection[];
   options: ProductOption[];
   variants: ProductVariant[];
 }
@@ -30,6 +31,7 @@ export function ProductView({
   featuredImage,
   priceTiers,
   customizations,
+  details,
   options,
   variants,
 }: ProductViewProps) {
@@ -91,6 +93,7 @@ export function ProductView({
         description={description}
         priceTiers={priceTiers}
         customizations={customizations}
+        details={details}
         options={options}
         variants={variants}
         selectedOptions={selectedOptions}
