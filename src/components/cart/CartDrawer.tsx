@@ -272,7 +272,7 @@ export function CartDrawer() {
                 <p className="text-gray-900 text-[11px] font-medium uppercase tracking-[0.12em]">
                   Total
                 </p>
-                <p className="font-display font-semibold text-black text-2xl leading-none tracking-tight">
+                <p className="text-card-title text-black">
                   {formatEUR(pricing.subtotal)}{" "}
                   <span className="text-gray-400 text-sm font-normal">
                     + IVA

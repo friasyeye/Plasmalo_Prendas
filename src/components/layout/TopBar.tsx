@@ -38,8 +38,7 @@ export function TopBar({ messages }: TopBarProps) {
 
   return (
     <div
-      className="w-full bg-black text-white text-xs py-2 overflow-hidden"
-      style={{ fontFamily: "var(--font-satoshi)" }}
+      className="w-full bg-black text-white text-xs py-2 overflow-hidden"
     >
       <div className="banner-scroll flex whitespace-nowrap">
         {/* Primer grupo */}

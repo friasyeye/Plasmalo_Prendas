@@ -5,36 +5,15 @@ export function Testimonials() {
   return (
     <section className="bg-[#FAFAFA] px-4 md:px-8 pt-16 pb-8 md:pb-10">
       <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20">
-        <p
-          className="text-black mb-4"
-          style={{
-            fontFamily: "var(--font-general-sans)",
-            fontSize: "clamp(22px, 6vw, 32px)",
-            fontWeight: 700,
-            letterSpacing: "-0.01em",
-            lineHeight: 1.3,
-          }}
-        >
+        <p className="text-section-title text-black mb-4">
           ¿Sabías que la ropa que llevas habla por ti antes de que digas una
           sola palabra?
         </p>
-        <p
-          className="text-black mb-5"
-          style={{
-            fontFamily: "var(--font-general-sans)",
-            fontSize: "clamp(17px, 4.5vw, 22px)",
-            fontWeight: 600,
-            letterSpacing: "-0.01em",
-            lineHeight: 1.5,
-          }}
-        >
+        <p className="text-card-title text-black mb-5">
           En Plásmalo creamos prendas para marcas, equipos y personas que
           entienden que los detalles importan. Llevamos años haciéndolo bien.
         </p>
-        <p
-          className="text-gray-600 font-medium text-base md:text-lg"
-          style={{ fontFamily: "var(--font-satoshi)" }}
-        >
+        <p className="text-body text-gray-600">
           Tan bien, que nos dicen cosas como estas:
         </p>
       </div>
@@ -58,7 +37,7 @@ export function Testimonials() {
                     className="object-cover"
                   />
                 </div>
-                <div style={{ fontFamily: "var(--font-satoshi)" }}>
+                <div>
                   <p className="text-base font-semibold text-black leading-tight">
                     {testimonial.name}
                   </p>
@@ -71,7 +50,6 @@ export function Testimonials() {
               {/* Quote */}
               <p
                 className="text-base text-black italic mb-5 leading-relaxed"
-                style={{ fontFamily: "var(--font-satoshi)" }}
               >
                 {testimonial.quote}
               </p>

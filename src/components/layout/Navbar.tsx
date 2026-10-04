@@ -62,7 +62,6 @@ function NavDropdown({
         aria-expanded={open}
         onClick={onToggle}
         className="flex items-center gap-1.5 text-[15px] font-medium text-black hover:opacity-70 transition-opacity"
-        style={{ fontFamily: "var(--font-satoshi)" }}
       >
         {label}
         <ChevronDown
@@ -79,7 +78,6 @@ function NavDropdown({
                 href={viewAllHref}
                 onClick={onClose}
                 className="block px-4 py-2.5 text-[15px] font-medium text-black border-b border-gray-100 mb-1 hover:bg-gray-50 transition-colors"
-                style={{ fontFamily: "var(--font-satoshi)" }}
               >
                 Ver todo {label.toLowerCase()}
               </Link>
@@ -91,7 +89,6 @@ function NavDropdown({
                   href={item.href}
                   onClick={onClose}
                   className="block px-4 py-2.5 text-[15px] text-black hover:bg-gray-50 transition-colors"
-                  style={{ fontFamily: "var(--font-satoshi)" }}
                 >
                   {item.label}
                 </Link>
@@ -101,7 +98,6 @@ function NavDropdown({
                   href="#"
                   onClick={onClose}
                   className="block px-4 py-2.5 text-[15px] text-black hover:bg-gray-50 transition-colors"
-                  style={{ fontFamily: "var(--font-satoshi)" }}
                 >
                   {item.label}
                 </a>
@@ -140,7 +136,6 @@ function MobileNavAccordion({
         aria-expanded={open}
         onClick={onToggle}
         className="flex items-center justify-between w-full text-lg font-medium text-black py-3 border-b border-gray-100"
-        style={{ fontFamily: "var(--font-satoshi)" }}
       >
         {label}
         <ChevronDown
@@ -155,7 +150,6 @@ function MobileNavAccordion({
             <Link
               href={viewAllHref}
               className="text-base font-medium text-black py-3 pl-4 border-b border-gray-100"
-              style={{ fontFamily: "var(--font-satoshi)" }}
               onClick={onItemClick}
             >
               Ver todo {label.toLowerCase()}
@@ -167,7 +161,6 @@ function MobileNavAccordion({
                 key={item.label}
                 href={item.href}
                 className="text-base text-black py-3 pl-4 border-b border-gray-100"
-                style={{ fontFamily: "var(--font-satoshi)" }}
                 onClick={onItemClick}
               >
                 {item.label}
@@ -177,7 +170,6 @@ function MobileNavAccordion({
                 key={item.label}
                 href="#"
                 className="text-base text-black py-3 pl-4 border-b border-gray-100"
-                style={{ fontFamily: "var(--font-satoshi)" }}
                 onClick={onItemClick}
               >
                 {item.label}
@@ -266,14 +258,12 @@ export function Navbar() {
           <Link
             href="/brand-session"
             className="text-[15px] font-medium text-black hover:opacity-70 transition-opacity"
-            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             Brand Session
           </Link>
           <Link
             href="/club-plasmalo"
             className="text-[15px] font-medium text-black hover:opacity-70 transition-opacity"
-            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             Club Plásmalo
           </Link>
@@ -338,7 +328,6 @@ export function Navbar() {
             <Link
               href="/brand-session"
               className="text-lg font-medium text-black py-3 border-b border-gray-100"
-              style={{ fontFamily: "var(--font-satoshi)" }}
               onClick={() => setMobileMenuOpen(false)}
             >
               Brand Session
@@ -346,7 +335,6 @@ export function Navbar() {
             <Link
               href="/club-plasmalo"
               className="text-lg font-medium text-black py-3 border-b border-gray-100"
-              style={{ fontFamily: "var(--font-satoshi)" }}
               onClick={() => setMobileMenuOpen(false)}
             >
               Club Plásmalo

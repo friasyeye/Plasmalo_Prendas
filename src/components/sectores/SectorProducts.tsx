@@ -11,7 +11,7 @@ interface SectorProductsProps {
 export function SectorProducts({ sectorName, products }: SectorProductsProps) {
   return (
     <section className="bg-white px-4 md:px-8 py-16 md:py-20">
-      <h2 className="font-display font-semibold text-black text-3xl md:text-4xl tracking-[-0.02em]">
+      <h2 className="text-section-title text-black">
         Recomendado para {sectorName.toLowerCase()}
       </h2>
 
@@ -29,7 +29,7 @@ export function SectorProducts({ sectorName, products }: SectorProductsProps) {
                 />
               </div>
               <div className="flex justify-between items-center gap-2 pt-2 md:pt-3 pb-1">
-                <h3 className="font-display font-semibold text-black text-lg md:text-[26px] tracking-[-0.01em] truncate">
+                <h3 className="text-card-title text-black truncate">
                   {name}
                 </h3>
                 <ArrowUpRight className="shrink-0 w-5 h-5 md:w-6 md:h-6 text-black" />
@@ -50,19 +50,17 @@ export function SectorProducts({ sectorName, products }: SectorProductsProps) {
       </div>
 
       <div className="mt-16 md:mt-20 max-w-2xl mx-auto text-center">
-        <h3 className="font-display font-semibold text-black text-xl md:text-2xl tracking-[-0.02em]">
+        <h3 className="text-section-title text-black">
           ¿No encuentras lo que buscas?
         </h3>
         <p
           className="mt-3 text-base text-black/60"
-          style={{ fontFamily: "var(--font-satoshi)" }}
         >
           Analizamos tu marca y diseñamos una propuesta de merchandising hecha
           a tu medida. Gratis, sin compromiso, 30 minutos.
         </p>
         <Link
           href="/brand-session"
-          style={{ fontFamily: "var(--font-satoshi)" }}
           className="mt-6 inline-block w-fit rounded-full border border-black bg-black text-white px-5 py-2.5 text-[14px] font-medium hover:bg-transparent hover:text-black transition-colors"
         >
           Reservar mi Brand Session →

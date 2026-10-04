@@ -13,12 +13,11 @@ export default function PrendasPage() {
       <Navbar />
       <main className="px-4 md:px-8 py-12 md:py-16">
         <div className="max-w-2xl mx-auto text-center mb-10 md:mb-14">
-          <h1 className="font-display font-semibold text-black text-3xl md:text-5xl tracking-[-0.02em]">
+          <h1 className="text-hero text-black">
             ¿Qué quieres personalizar?
           </h1>
           <p
             className="mt-3 text-base md:text-lg text-black/60"
-            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             Elige el tipo de producto que mejor se adapta a tu proyecto.
           </p>
@@ -32,12 +31,11 @@ export default function PrendasPage() {
               className="group flex flex-col justify-between bg-[rgb(245,245,245)] p-6 min-h-[280px] md:min-h-[320px]"
             >
               <div>
-                <h2 className="font-display font-semibold text-black text-2xl tracking-[-0.01em]">
+                <h2 className="text-card-title text-black">
                   {name}
                 </h2>
                 <p
                   className="mt-1 text-sm text-black/60 max-w-[220px]"
-                  style={{ fontFamily: "var(--font-satoshi)" }}
                 >
                   {description}
                 </p>
@@ -70,12 +68,11 @@ export default function PrendasPage() {
                   <Icon className="w-5 h-5 text-black" strokeWidth={1.5} />
                 </span>
                 <div>
-                  <h3 className="font-display font-semibold text-black text-sm md:text-base">
+                  <h3 className="text-nav text-black">
                     {title}
                   </h3>
                   <p
                     className="mt-0.5 text-xs md:text-sm text-black/60"
-                    style={{ fontFamily: "var(--font-satoshi)" }}
                   >
                     {description}
                   </p>

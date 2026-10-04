@@ -2,17 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export function Hero() {
-  const headingStyle: React.CSSProperties = {
-    fontFamily: "var(--font-general-sans)",
-    fontSize: "clamp(28px, 4vw, 56px)",
-    fontWeight: 600,
-    lineHeight: 1.05,
-    letterSpacing: "-0.02em",
-    color: "white",
-    margin: 0,
-    padding: 0,
-  };
-
   return (
     // En mobile la altura descuenta TopBar+Navbar (~6rem) y usa svh (altura
     // visible con la barra del navegador desplegada) para que los CTAs
@@ -70,7 +59,7 @@ export function Hero() {
       {/* Contenido superpuesto */}
       <div className="relative z-10 flex min-h-[calc(100svh-6rem)] md:min-h-screen flex-col justify-end px-6 md:px-8 pb-14 md:pb-40 pt-32">
         {/* Heading */}
-        <h1 style={headingStyle}>
+        <h1 className="text-hero text-white m-0 p-0">
           Tu marca merece mucho más <br className="hidden md:block" />
           que ropa personalizada
         </h1>
@@ -80,14 +69,12 @@ export function Hero() {
             href="https://wa.me/?text=Hola,%20me%20gustaría%20solicitar%20un%20mockup%20gratis"
             target="_blank"
             rel="noopener noreferrer"
-            style={{ fontFamily: "var(--font-satoshi)" }}
             className="w-fit rounded-full border border-white bg-white text-black px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-transparent hover:text-white transition-colors text-center"
           >
             Diseña tu pedido
           </a>
           <Link
             href="/prendas"
-            style={{ fontFamily: "var(--font-satoshi)" }}
             className="w-fit rounded-full border border-white bg-transparent text-white px-4 py-2 text-[13px] md:px-5 md:py-2.5 md:text-[14px] shrink-0 cursor-pointer hover:bg-white hover:text-black transition-colors text-center"
           >
             Cuéntanos tu proyecto

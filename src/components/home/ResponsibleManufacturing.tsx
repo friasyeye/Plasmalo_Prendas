@@ -14,7 +14,6 @@ export function ResponsibleManufacturing() {
       <div className="max-w-3xl mx-auto text-center">
         <p
           className="text-sm md:text-base font-medium text-black/60 tracking-[0.04em]"
-          style={{ fontFamily: "var(--font-satoshi)" }}
         >
           Ropa fabricada con responsabilidad
         </p>

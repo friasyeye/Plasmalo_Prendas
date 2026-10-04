@@ -1,27 +1,23 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter_Tight } from "next/font/google";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { TopBar } from "@/components/layout/TopBar";
 import { getTopBarMessages } from "@/lib/shopify/client";
 import "./globals.css";
 
-const generalSans = localFont({
-  src: [
-    { path: "./fonts/GeneralSans-500.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/GeneralSans-600.woff2", weight: "600", style: "normal" },
-    { path: "./fonts/GeneralSans-700.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-general-sans",
-  display: "swap",
-});
-
-const satoshi = localFont({
-  src: [
-    { path: "./fonts/Satoshi-400.woff2", weight: "400", style: "normal" },
-    { path: "./fonts/Satoshi-500.woff2", weight: "500", style: "normal" },
-    { path: "./fonts/Satoshi-700.woff2", weight: "700", style: "normal" },
-  ],
-  variable: "--font-satoshi",
+/*
+ * Inter Tight es la ÚNICA familia de la web: toda la jerarquía sale de sus
+ * pesos (400 cuerpo → 800 hero), no de mezclar fuentes. next/font/google la
+ * auto-hospeda en build time, así que no hay petición a Google en runtime.
+ *
+ * Los tamaños/pesos concretos viven en la escala tipográfica de globals.css
+ * (.text-hero, .text-section-title, …). Los componentes usan esas clases en
+ * lugar de declarar font-size o font-weight por su cuenta.
+ */
+const interTight = Inter_Tight({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-inter-tight",
   display: "swap",
 });
 
@@ -45,7 +41,7 @@ export default async function RootLayout({
   const topBarMessages = await getTopBarMessages();
 
   return (
-    <html lang="es" className={`${generalSans.variable} ${satoshi.variable}`}>
+    <html lang="es" className={interTight.variable}>
       <body className="min-h-full">
         <TopBar messages={topBarMessages} />
         {children}

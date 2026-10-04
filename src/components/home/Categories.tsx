@@ -11,7 +11,7 @@ export function Categories({ categories }: CategoriesProps) {
   return (
     <section className="bg-white px-4 md:px-8 py-12 md:py-16">
       <div className="flex items-end justify-between gap-4 mb-6 md:mb-8">
-        <h2 className="font-display font-semibold text-black text-3xl md:text-4xl tracking-[-0.02em]">
+        <h2 className="text-section-title text-black">
           Todo lo que tu marca necesita para destacar
         </h2>
         <button className="shrink-0 text-sm font-medium text-black bg-black/10 rounded-full px-4 py-2">
@@ -46,7 +46,7 @@ export function Categories({ categories }: CategoriesProps) {
                 )}
               </div>
               <div className="flex justify-between items-center gap-2 pt-2 md:pt-3 pb-1">
-                <h3 className="font-display font-semibold text-black text-lg md:text-[26px] tracking-[-0.01em] truncate">
+                <h3 className="text-card-title text-black truncate">
                   {name}
                 </h3>
                 <ArrowUpRight className="shrink-0 w-5 h-5 md:w-6 md:h-6 text-black" />

@@ -20,22 +20,19 @@ export function BrandSession({
         <div className="flex flex-col justify-center px-6 md:px-16 py-16 md:py-24 md:min-h-[640px] order-2 md:order-1">
           <span
             className="text-sm text-white/60 tracking-[0.08em] mb-4"
-            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             {kicker}
           </span>
-          <h2 className="font-display font-semibold text-white text-3xl md:text-5xl tracking-[-0.02em] max-w-md">
+          <h2 className="text-hero text-white max-w-md">
             {title}
           </h2>
           <p
             className="mt-4 text-base md:text-lg text-white/70 max-w-md"
-            style={{ fontFamily: "var(--font-satoshi)" }}
           >
             {description}
           </p>
           <Link
             href="/brand-session"
-            style={{ fontFamily: "var(--font-satoshi)" }}
             className="mt-8 w-fit rounded-full border border-white bg-white text-black px-5 py-2.5 text-[14px] font-medium hover:bg-transparent hover:text-white transition-colors"
           >
             {cta}

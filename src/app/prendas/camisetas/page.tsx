@@ -17,16 +17,14 @@ export default function CamisetasPage() {
           <div className="max-w-2xl mx-auto text-center mb-10 md:mb-14">
             <span
               className="text-sm text-black/50 tracking-[0.08em]"
-              style={{ fontFamily: "var(--font-satoshi)" }}
             >
               Camisetas
             </span>
-            <h1 className="mt-2 font-display font-semibold text-black text-3xl md:text-5xl tracking-[-0.02em]">
+            <h1 className="mt-2 text-hero text-black">
               Elige la camiseta que mejor se adapta a tu proyecto
             </h1>
             <p
               className="mt-3 text-base md:text-lg text-black/60"
-              style={{ fontFamily: "var(--font-satoshi)" }}
             >
               Hemos seleccionado las mejores opciones según el uso, la imagen
               y el rendimiento.
@@ -54,22 +52,19 @@ export default function CamisetasPage() {
                   <div className="flex flex-col flex-1 px-5 pb-5">
                     <span
                       className="text-xs uppercase tracking-[0.06em] text-black/50 mb-1"
-                      style={{ fontFamily: "var(--font-satoshi)" }}
                     >
                       {badge}
                     </span>
-                    <h2 className="font-display font-semibold text-black text-xl tracking-[-0.01em]">
+                    <h2 className="text-card-title text-black">
                       {name}
                     </h2>
                     <p
                       className="mt-1 text-sm text-black/60"
-                      style={{ fontFamily: "var(--font-satoshi)" }}
                     >
                       {description}
                     </p>
                     <p
                       className="mt-1 text-xs text-black/40"
-                      style={{ fontFamily: "var(--font-satoshi)" }}
                     >
                       {reference}
                     </p>
@@ -88,7 +83,6 @@ export default function CamisetasPage() {
             <Link
               href="#"
               className="inline-flex items-center gap-1.5 text-sm font-medium text-black underline underline-offset-4 decoration-black/30 hover:decoration-black transition-colors"
-              style={{ fontFamily: "var(--font-satoshi)" }}
             >
               ¿No encuentras tu modelo? Ver catálogo completo
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -104,12 +98,11 @@ export default function CamisetasPage() {
                     <Icon className="w-5 h-5 text-black" strokeWidth={1.5} />
                   </span>
                   <div>
-                    <h3 className="font-display font-semibold text-black text-sm md:text-base">
+                    <h3 className="text-nav text-black">
                       {title}
                     </h3>
                     <p
                       className="mt-0.5 text-xs md:text-sm text-black/60"
-                      style={{ fontFamily: "var(--font-satoshi)" }}
                     >
                       {description}
                     </p>

@@ -10,13 +10,10 @@ export function Sectors({ sectors }: SectorsProps) {
   return (
     <section className="bg-white px-4 md:px-8 py-12 md:py-16">
       <div className="mb-6 md:mb-8">
-        <h2 className="font-display font-semibold text-black text-3xl md:text-4xl tracking-[-0.02em]">
+        <h2 className="text-section-title text-black">
           Tu marca, tu sector, tu identidad
         </h2>
-        <p
-          className="mt-2 text-base md:text-lg text-black/60"
-          style={{ fontFamily: "var(--font-satoshi)" }}
-        >
+        <p className="mt-2 text-body text-black/60">
           Soluciones a medida para cada tipo de empresa
         </p>
       </div>
@@ -40,7 +37,7 @@ export function Sectors({ sectors }: SectorsProps) {
 
               <div className="absolute inset-x-0 bottom-0 p-3 md:p-4">
                 <h3
-                  className="font-display font-bold text-white text-xl md:text-2xl leading-none tracking-[-0.01em]"
+                  className="text-card-title text-white"
                   style={{ textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}
                 >
                   {name}

@@ -5,7 +5,7 @@ export function ClubBenefits() {
   return (
     <section className="bg-[rgb(245,245,245)] px-4 md:px-8 py-16 md:py-20">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="font-display font-semibold text-black text-3xl md:text-4xl tracking-[-0.02em]">
+        <h2 className="text-section-title text-black">
           Lo que dejas de tener que gestionar
         </h2>
 
@@ -20,7 +20,6 @@ export function ClubBenefits() {
               </span>
               <span
                 className="text-sm md:text-base text-black/80"
-                style={{ fontFamily: "var(--font-satoshi)" }}
               >
                 {benefit}
               </span>
@@ -30,7 +29,6 @@ export function ClubBenefits() {
 
         <p
           className="mt-8 text-base md:text-lg font-medium text-black"
-          style={{ fontFamily: "var(--font-satoshi)" }}
         >
           {clubBenefitsClosing}
         </p>

@@ -235,13 +235,13 @@ export function ProductConfigurator({
   return (
     <div className="flex flex-col bg-[#F4F4F4] p-5 md:p-6">
       <div className="pb-5 mb-5 border-b border-gray-200">
-        <h1 className="font-display font-semibold text-black text-2xl md:text-3xl mb-1 leading-tight tracking-tight">
+        <h1 className="text-section-title text-black mb-1">
           {title}
         </h1>
         <p className="text-gray-600 text-base leading-relaxed max-w-md mb-3">
           {description}
         </p>
-        <p className="font-display font-semibold text-black text-xl">
+        <p className="text-card-title text-black">
           {formatEUR(unitTotal)} <span className="text-gray-400 text-base font-normal">+ IVA</span>
         </p>
         <p className="text-gray-400 text-sm">
@@ -648,7 +648,7 @@ export function ProductConfigurator({
                 ({combinedTotalUnits} uds)
               </span>
             </p>
-            <p className="font-display font-semibold text-black text-3xl leading-none tracking-tight">
+            <p className="text-section-title text-black">
               {formatEUR(combinedSubtotal)}{" "}
               <span className="text-gray-400 text-base font-normal">+ IVA</span>
             </p>
@@ -675,7 +675,7 @@ export function ProductConfigurator({
           <p className="text-xs text-gray-500 truncate">
             {quantity} ud{quantity > 1 ? "s" : ""} · {formatEUR(unitTotal)}/ud + IVA
           </p>
-          <p className="font-display font-semibold text-black text-xl leading-tight truncate">
+          <p className="text-card-title text-black truncate">
             {formatEUR(orderTotal)}{" "}
             <span className="text-gray-400 text-sm font-normal">+ IVA</span>
           </p>
