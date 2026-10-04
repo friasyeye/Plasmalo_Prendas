@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { brandSessionIntro } from "@/config/brand-session";
 
 export function BrandSessionIntro() {
@@ -25,6 +26,16 @@ export function BrandSessionIntro() {
         >
           {brandSessionIntro.audience}
         </p>
+      </div>
+
+      <div className="relative mt-10 md:mt-14 max-w-4xl mx-auto aspect-16/7 overflow-hidden">
+        <Image
+          src="/images/sabes-lo-que-quieres.png"
+          alt="Equipo de Plásmalo trabajando en una Brand Session"
+          fill
+          sizes="(min-width: 768px) 56rem, 100vw"
+          className="object-cover object-center"
+        />
       </div>
     </section>
   );

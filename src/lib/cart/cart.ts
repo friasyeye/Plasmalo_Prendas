@@ -55,6 +55,21 @@ export function addLine(lines: CartLine[], incoming: CartLine): CartLine[] {
   );
 }
 
+/** Talla primero y Color después: "10 S Negro", como se pide un pedido en voz alta. */
+export function formatLineSummary(line: CartLine): string {
+  const entries = Object.entries(line.selectedOptions);
+  const size = entries.find(([name]) => /talla|size/i.test(name));
+  const color = entries.find(([name]) => /color|colour/i.test(name));
+  const rest = entries.filter(([name]) => name !== size?.[0] && name !== color?.[0]);
+
+  const label = [size, color, ...rest]
+    .filter((entry): entry is [string, string] => Boolean(entry))
+    .map(([, value]) => value)
+    .join(" ");
+
+  return `${line.quantity} ${label}`.trim();
+}
+
 export function removeLine(lines: CartLine[], lineId: string): CartLine[] {
   return lines.filter((line) => line.id !== lineId);
 }

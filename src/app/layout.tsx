@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { TopBar } from "@/components/layout/TopBar";
+import { getTopBarMessages } from "@/lib/shopify/client";
 import "./globals.css";
 
 const generalSans = localFont({
@@ -35,14 +37,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const topBarMessages = await getTopBarMessages();
+
   return (
     <html lang="es" className={`${generalSans.variable} ${satoshi.variable}`}>
       <body className="min-h-full">
+        <TopBar messages={topBarMessages} />
         {children}
         <CartDrawer />
       </body>

@@ -38,34 +38,40 @@ export interface Sector {
 
 export const sectors: Sector[] = [
   {
-    name: "Restaurantes",
+    name: "Restauración",
     img: "/images/restaurantes.png",
     tagline: "Uniformes que resisten el turno",
     slug: "restaurantes",
   },
   {
-    name: "Gimnasios",
-    img: "/images/gimnasios.png",
-    tagline: "Equipación técnica con tu marca",
+    name: "Deporte & Fitness",
+    img: "/images/gimnasios.jpg",
+    tagline: "Viste tu equipo, construye una comunidad",
     slug: "gimnasios",
   },
   {
-    name: "Constructores",
+    name: "Industria & Construcción",
     img: "/images/Construcción.png",
-    tagline: "Ropa laboral certificada",
+    tagline: "Imagen profesional, preparada para el trabajo real",
     slug: "constructores",
   },
   {
-    name: "Eventos",
-    img: "/images/eventos.png",
-    tagline: "Tu equipo, identificado y con marca",
+    name: "Eventos & Ocio",
+    img: "/images/eventos.jpg",
+    tagline: "Haz que cada evento deje huella",
     slug: "eventos",
   },
   {
-    name: "Oficinas",
+    name: "Empresas & Oficinas",
     img: "/images/oficina.png",
-    tagline: "Imagen de marca cada día",
+    tagline: "Tu equipo también es parte de tu marca",
     slug: "oficinas",
+  },
+  {
+    name: "Marcas & Creadores",
+    img: "/images/marcas_y_creadores.jpg",
+    tagline: "Convierte tu identidad en algo que la gente quiera llevar",
+    slug: "marcas-y-creadores",
   },
 ];
 

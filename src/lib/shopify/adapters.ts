@@ -7,7 +7,11 @@
  * de plataforma, solo se toca esta capa.
  */
 
-import type { ShopifyFeaturedProductsResponse, ShopifyProductResponse } from "./types";
+import type {
+  ShopifyFeaturedProductsResponse,
+  ShopifyProductResponse,
+  ShopifyTopBarMessagesResponse,
+} from "./types";
 import type { HomeCategory } from "@/config/home";
 import type { Product, PriceTier, ProductOption, ProductVariant } from "@/types";
 
@@ -32,6 +36,26 @@ export function toHomeFeaturedCategories(
       handle: product.handle,
     };
   });
+}
+
+/**
+ * Traduce la respuesta de getTopBarMessagesQuery a un array de frases.
+ * Devuelve null si el metafield no existe o su valor no es un array de
+ * strings válido, para que el caller decida el fallback.
+ */
+export function toTopBarMessages(raw: ShopifyTopBarMessagesResponse): string[] | null {
+  const rawValue = raw.shop.metafield?.value;
+  if (!rawValue) return null;
+
+  try {
+    const parsed: unknown = JSON.parse(rawValue);
+    if (!Array.isArray(parsed) || !parsed.every((item) => typeof item === "string")) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
 }
 
 /**

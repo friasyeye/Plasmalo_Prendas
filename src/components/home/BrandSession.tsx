@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 interface BrandSessionProps {
@@ -41,7 +42,15 @@ export function BrandSession({
           </Link>
         </div>
 
-        <div className="relative aspect-4/5 md:aspect-auto md:min-h-[640px] bg-[rgb(30,30,30)] order-1 md:order-2" />
+        <div className="relative aspect-4/5 md:aspect-auto md:min-h-[640px] bg-[rgb(30,30,30)] order-1 md:order-2">
+          <Image
+            src="/images/brand-session.png"
+            alt="Sesión de Brand Session de Plásmalo"
+            fill
+            sizes="(min-width: 768px) 50vw, 100vw"
+            className="object-cover object-center"
+          />
+        </div>
       </div>
     </section>
   );

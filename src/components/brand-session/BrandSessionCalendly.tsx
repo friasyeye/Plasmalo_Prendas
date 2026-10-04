@@ -3,8 +3,7 @@
 import Script from "next/script";
 import { brandSessionCalendly, brandSessionProcess } from "@/config/brand-session";
 
-// TODO: sustituir por la URL real de Calendly de Plásmalo cuando esté disponible.
-const CALENDLY_URL = "https://calendly.com/alexfrias-ia/30min";
+const CALENDLY_URL = "https://calendly.com/plasmaloprendas/30min";
 
 export function BrandSessionCalendly() {
   return (

@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { TopBar } from "@/components/layout/TopBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { ProductView } from "@/components/product/ProductView";
@@ -21,7 +20,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <>
-      <TopBar />
       <Navbar />
       <main className="min-h-screen bg-white">
         <div className="px-4 md:px-8 py-6 md:py-10 max-w-7xl mx-auto">

@@ -6,6 +6,19 @@ export function Testimonials() {
     <section className="bg-[#FAFAFA] px-4 md:px-8 pt-16 pb-8 md:pb-10">
       <div className="max-w-2xl mx-auto text-center mb-16 md:mb-20">
         <p
+          className="text-black mb-4"
+          style={{
+            fontFamily: "var(--font-general-sans)",
+            fontSize: "clamp(22px, 6vw, 32px)",
+            fontWeight: 700,
+            letterSpacing: "-0.01em",
+            lineHeight: 1.3,
+          }}
+        >
+          ¿Sabías que la ropa que llevas habla por ti antes de que digas una
+          sola palabra?
+        </p>
+        <p
           className="text-black mb-5"
           style={{
             fontFamily: "var(--font-general-sans)",
@@ -15,13 +28,11 @@ export function Testimonials() {
             lineHeight: 1.5,
           }}
         >
-          En Plásmalo creemos que la ropa que llevas habla por ti antes de que
-          digas una sola palabra. Creamos prendas para marcas, equipos y
-          personas que entienden que los detalles importan. Y llevamos años
-          haciéndolo bien.
+          En Plásmalo creamos prendas para marcas, equipos y personas que
+          entienden que los detalles importan. Llevamos años haciéndolo bien.
         </p>
         <p
-          className="text-gray-600 font-medium text-xs md:text-sm"
+          className="text-gray-600 font-medium text-base md:text-lg"
           style={{ fontFamily: "var(--font-satoshi)" }}
         >
           Tan bien, que nos dicen cosas como estas:

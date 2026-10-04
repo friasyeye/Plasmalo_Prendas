@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, ShieldCheck, Sparkles, Palette, Timer } from "lucide-react";
-import { TopBar } from "@/components/layout/TopBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BrandSession } from "@/components/home/BrandSession";
@@ -12,7 +11,6 @@ const trustIcons = { ShieldCheck, Sparkles, Palette, Timer };
 export default function CamisetasPage() {
   return (
     <>
-      <TopBar />
       <Navbar />
       <main>
         <div className="px-4 md:px-8 py-12 md:py-16">

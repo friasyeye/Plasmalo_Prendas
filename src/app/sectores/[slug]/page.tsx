@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { TopBar } from "@/components/layout/TopBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { SectorHero } from "@/components/sectores/SectorHero";
@@ -20,7 +19,6 @@ export default async function SectorPage({ params }: SectorPageProps) {
 
   return (
     <>
-      <TopBar />
       <Navbar />
       <main>
         <SectorHero sector={sector} />

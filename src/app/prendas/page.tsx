@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Truck, ShieldCheck, Sparkles, Headset } from "lucide-react";
-import { TopBar } from "@/components/layout/TopBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { prendaCategories, trustBadges } from "@/config/prendas";
@@ -11,7 +10,6 @@ const trustIcons = { Truck, ShieldCheck, Sparkles, Headset };
 export default function PrendasPage() {
   return (
     <>
-      <TopBar />
       <Navbar />
       <main className="px-4 md:px-8 py-12 md:py-16">
         <div className="max-w-2xl mx-auto text-center mb-10 md:mb-14">

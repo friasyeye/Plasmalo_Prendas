@@ -1,6 +1,12 @@
 import Image from "next/image";
 
-const sellos = [1, 2, 3, 4, 5].map((n) => `/images/sello_${n}.${n === 5 ? "png" : "jpeg"}`);
+const sellos = [
+  "/images/sello-fairwear.svg",
+  "/images/sello-peta-vegan.png",
+  "/images/sello-amfori.png",
+  "/images/sello-cascale.png",
+  "/images/sello-oeko-tex.png",
+];
 
 export function ResponsibleManufacturing() {
   return (
@@ -26,13 +32,6 @@ export function ResponsibleManufacturing() {
             </div>
           ))}
         </div>
-
-        <p
-          className="mt-4 text-xs md:text-sm text-black/40"
-          style={{ fontFamily: "var(--font-satoshi)" }}
-        >
-          Certificación vegana no aplicable a los modelos NEOBLU Sullivan, Stefan y Stuart.
-        </p>
       </div>
     </section>
   );

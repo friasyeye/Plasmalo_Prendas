@@ -21,43 +21,30 @@ export function Sectors({ sectors }: SectorsProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
-        {sectors.map(({ name, img, tagline, slug }, index) => {
-          const isLastOdd =
-            sectors.length % 2 !== 0 && index === sectors.length - 1;
-
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-black/10">
+        {sectors.map(({ name, img, slug }) => {
           return (
             <Link
               key={name}
               href={`/sectores/${slug}`}
-              className={`relative aspect-2/3 overflow-hidden bg-[rgb(245,245,245)] cursor-pointer group ${
-                isLastOdd ? "col-span-2 md:col-span-1" : ""
-              }`}
+              className="relative aspect-2/3 overflow-hidden bg-[rgb(245,245,245)] cursor-pointer group"
             >
               <Image
                 src={img}
                 alt={name}
                 fill
-                sizes="(max-width: 768px) 50vw, 20vw"
+                sizes="(max-width: 640px) 50vw, 33vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-black/70 to-transparent" />
+
               <div className="absolute inset-x-0 bottom-0 p-3 md:p-4">
                 <h3
-                  className="font-display font-semibold text-white text-2xl md:text-[32px] tracking-[-0.01em]"
+                  className="font-display font-bold text-white text-xl md:text-2xl leading-none tracking-[-0.01em]"
                   style={{ textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}
                 >
                   {name}
                 </h3>
-                <p
-                  className="mt-0.5 text-xs md:text-sm text-white/90"
-                  style={{
-                    fontFamily: "var(--font-satoshi)",
-                    textShadow: "0 1px 3px rgba(0,0,0,0.4)",
-                  }}
-                >
-                  {tagline}
-                </p>
               </div>
             </Link>
           );

@@ -23,6 +23,16 @@ export interface ShopifyImage {
   height: number;
 }
 
+/** Respuesta cruda de getTopBarMessagesQuery (shop.ts). */
+export interface ShopifyTopBarMessagesResponse {
+  shop: {
+    metafield: {
+      /** Metafield de tipo lista: llega como string JSON, p. ej. '["a","b"]'. */
+      value: string;
+    } | null;
+  };
+}
+
 /** Respuesta cruda de getFeaturedProductsQuery (collections.ts). */
 export interface ShopifyFeaturedProductsResponse {
   collection: {

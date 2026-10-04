@@ -1,4 +1,3 @@
-import { TopBar } from "@/components/layout/TopBar";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { BrandSessionIntro } from "@/components/brand-session/BrandSessionIntro";
@@ -7,7 +6,6 @@ import { BrandSessionCalendly } from "@/components/brand-session/BrandSessionCal
 export default function BrandSessionPage() {
   return (
     <>
-      <TopBar />
       <Navbar />
       <main>
         <BrandSessionIntro />

@@ -34,21 +34,6 @@ function formatSelectedOptions(selectedOptions: Record<string, string>): string 
     .join(" — ");
 }
 
-/** Talla primero y Color después: "10 S Negro", como se pide un pedido en voz alta. */
-function formatLineSummary(line: CartLine): string {
-  const entries = Object.entries(line.selectedOptions);
-  const size = entries.find(([name]) => /talla|size/i.test(name));
-  const color = entries.find(([name]) => /color|colour/i.test(name));
-  const rest = entries.filter(([name]) => name !== size?.[0] && name !== color?.[0]);
-
-  const label = [size, color, ...rest]
-    .filter((entry): entry is [string, string] => Boolean(entry))
-    .map(([, value]) => value)
-    .join(" ");
-
-  return `${line.quantity} ${label}`.trim();
-}
-
 function CartLineRow({
   line,
   pricing,
@@ -279,14 +264,7 @@ export function CartDrawer() {
             {/* Resumen del pedido: siempre visible con el carrito abierto
                 (manual de pricing, punto D). */}
             <div className="shrink-0 border-t border-gray-200 px-5 py-4 space-y-1.5 bg-white pb-[calc(1rem+env(safe-area-inset-bottom))]">
-              <ul className="space-y-1 pb-1">
-                {lines.map((line) => (
-                  <li key={line.id} className="text-sm text-black">
-                    {formatLineSummary(line)}
-                  </li>
-                ))}
-              </ul>
-              <div className="flex items-baseline justify-between text-sm pt-1">
+              <div className="flex items-baseline justify-between text-sm">
                 <p className="text-gray-500">Unidades</p>
                 <p className="text-black font-medium">{pricing.totalUnits}</p>
               </div>

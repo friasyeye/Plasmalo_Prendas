@@ -1,10 +1,16 @@
 import { getShopifyConfig } from "@/config/env";
 import { getFeaturedProductsQuery } from "./queries/collections";
 import { getProductQuery } from "./queries/product";
-import { toHomeFeaturedCategories, toProduct } from "./adapters";
-import type { ShopifyFeaturedProductsResponse, ShopifyProductResponse } from "./types";
+import { getTopBarMessagesQuery } from "./queries/shop";
+import { toHomeFeaturedCategories, toProduct, toTopBarMessages } from "./adapters";
+import type {
+  ShopifyFeaturedProductsResponse,
+  ShopifyProductResponse,
+  ShopifyTopBarMessagesResponse,
+} from "./types";
 import type { HomeCategory } from "@/config/home";
 import type { Product } from "@/types";
+import { topBarMessages as topBarMessagesFallback } from "@/config/site";
 
 /**
  * Cliente mínimo de la Shopify Storefront API (GraphQL).
@@ -103,4 +109,27 @@ export async function getProduct(
     revalidate: options?.revalidate,
   });
   return toProduct(data);
+}
+
+const TOPBAR_REVALIDATE_SECONDS = 300; // 5 minutos
+
+/**
+ * Frases del banner superior (custom.topbar_messages, metafield del Shop),
+ * editables por el cliente desde el admin sin tocar código. Si el metafield
+ * no existe o falla la petición, devuelve el fallback hardcodeado de
+ * config/site.ts.
+ *
+ * Caché más corta que el resto del catálogo (5 min vs. 2h): es un banner
+ * promocional que el cliente espera ver reflejado casi al momento.
+ */
+export async function getTopBarMessages(): Promise<string[]> {
+  try {
+    const data = await shopifyFetch<ShopifyTopBarMessagesResponse>({
+      query: getTopBarMessagesQuery,
+      revalidate: TOPBAR_REVALIDATE_SECONDS,
+    });
+    return toTopBarMessages(data) ?? topBarMessagesFallback;
+  } catch {
+    return topBarMessagesFallback;
+  }
 }

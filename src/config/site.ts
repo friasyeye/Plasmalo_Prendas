@@ -28,6 +28,11 @@ export const navMerchandising = [
   "Llaveros",
 ];
 
+/**
+ * Fallback si el metafield custom.topbar_messages (Shop, Shopify) no existe
+ * o falla la petición. La fuente de verdad real la gestiona el cliente desde
+ * el admin de Shopify (ver getTopBarMessages en lib/shopify/client.ts).
+ */
 export const topBarMessages = [
   "Sin pedido mínimo",
   "Envío gratis desde 50€",

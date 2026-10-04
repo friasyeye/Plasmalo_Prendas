@@ -49,7 +49,7 @@ export function ProductConfigurator({
   selectedOptions,
   onSelectOption,
 }: ProductConfiguratorProps) {
-  const { addToCart, openCart } = useCart();
+  const { lines: cartLines, pricing: cartPricing, addToCart, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [openDetail, setOpenDetail] = useState<string | null>(null);
   const [selectedZones, setSelectedZones] = useState<string[]>(() => {
@@ -129,6 +129,75 @@ export function ProductConfigurator({
     customizationUnitPrice,
   });
   const orderTotalWithIva = orderTotal * (1 + IVA_RATE);
+
+  // "Tu pedido" agrega lo que ya hay en la cesta (de líneas añadidas antes)
+  // con la línea que se está configurando ahora mismo, para que el cliente
+  // vea de un vistazo todo su pedido sin tener que abrir el carrito.
+  const combinedTotalUnits = cartPricing.totalUnits + quantity;
+  const combinedSubtotal = cartPricing.subtotal + orderTotal;
+  const combinedTotalWithIva = cartPricing.totalWithIva + orderTotalWithIva;
+
+  const sizeOption = options.find((option) => /talla|size/i.test(option.name));
+  const colorOption = options.find((option) => /color|colour/i.test(option.name));
+
+  function renderColorOption(option: ProductOption) {
+    return (
+      <div key={option.name}>
+        <h3 className="text-black text-base font-medium mb-3">
+          {selectedOptions[option.name] ?? option.name}
+        </h3>
+        <div className="flex flex-wrap gap-2.5">
+          {option.values.map((value) => {
+            const active = selectedOptions[option.name] === value;
+            const swatchImage = findVariantImage(option.name, value);
+            return (
+              <button
+                key={value}
+                type="button"
+                aria-label={value}
+                onClick={() => onSelectOption(option.name, value)}
+                className={
+                  "pb-1.5 border-b transition-colors duration-200 " +
+                  (active
+                    ? "border-black"
+                    : "border-transparent hover:border-gray-300")
+                }
+              >
+                <span className="relative block w-14 h-14 overflow-hidden">
+                  {swatchImage ? (
+                    <Image
+                      src={swatchImage.url}
+                      alt={value}
+                      fill
+                      sizes="56px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <span className="w-full h-full flex items-center justify-center bg-gray-100 text-[11px] text-gray-500">
+                      {value.slice(0, 2)}
+                    </span>
+                  )}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // Unidades ya añadidas a la cesta de este producto, por talla — para el
+  // resumen visual bajo el selector de Talla (no incluye la línea que se
+  // está configurando ahora mismo, solo lo ya confirmado en el carrito).
+  const cartQuantityBySize: Record<string, number> = {};
+  if (sizeOption) {
+    for (const line of cartLines) {
+      if (line.productHandle !== productHandle) continue;
+      const size = line.selectedOptions[sizeOption.name];
+      if (!size) continue;
+      cartQuantityBySize[size] = (cartQuantityBySize[size] ?? 0) + line.quantity;
+    }
+  }
 
   const savingsInfo = getNextTierSavings(sortedTiers, quantity);
 
@@ -285,56 +354,15 @@ export function ProductConfigurator({
           )}
         </div>
 
-        {/* 3. Color · 4. Talla (orden de options según Shopify) */}
+        {/* 3. Color */}
+        {colorOption && renderColorOption(colorOption)}
+
+        {/* 4. Talla (Color se pinta arriba, justo debajo de "Sube tu diseño") */}
         {options.map((option) => {
           const isSizeOption = /talla|size/i.test(option.name);
           const isColorOption = /color|colour/i.test(option.name);
 
-          if (isColorOption) {
-            return (
-              <div key={option.name}>
-                <h3 className="text-black text-base font-medium mb-3">
-                  {selectedOptions[option.name] ?? option.name}
-                </h3>
-                <div className="flex flex-wrap gap-2.5">
-                  {option.values.map((value) => {
-                    const active = selectedOptions[option.name] === value;
-                    const swatchImage = findVariantImage(option.name, value);
-                    return (
-                      <button
-                        key={value}
-                        type="button"
-                        aria-label={value}
-                        onClick={() => onSelectOption(option.name, value)}
-                        className={
-                          "pb-1.5 border-b transition-colors duration-200 " +
-                          (active
-                            ? "border-black"
-                            : "border-transparent hover:border-gray-300")
-                        }
-                      >
-                        <span className="relative block w-14 h-14 overflow-hidden">
-                          {swatchImage ? (
-                            <Image
-                              src={swatchImage.url}
-                              alt={value}
-                              fill
-                              sizes="56px"
-                              className="object-cover"
-                            />
-                          ) : (
-                            <span className="w-full h-full flex items-center justify-center bg-gray-100 text-[11px] text-gray-500">
-                              {value.slice(0, 2)}
-                            </span>
-                          )}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          }
+          if (isColorOption) return null;
 
           return (
             <div key={option.name}>
@@ -412,71 +440,6 @@ export function ProductConfigurator({
           );
         })}
 
-        {/* Composición, estilo y cuidado */}
-        {details.length > 0 && (
-          <div className="border-t border-gray-200 pt-1">
-            {details.map((section) => {
-              const open = openDetail === section.title;
-              return (
-                <div key={section.title} className="border-b border-gray-200">
-                  <button
-                    type="button"
-                    aria-expanded={open}
-                    onClick={() => setOpenDetail(open ? null : section.title)}
-                    className="flex items-center justify-between w-full py-3 text-base font-medium text-black"
-                  >
-                    {section.title}
-                    <ChevronDown
-                      size={16}
-                      className={
-                        "transition-transform duration-200 " + (open ? "rotate-180" : "")
-                      }
-                    />
-                  </button>
-                  {open && (
-                    <ul className="pb-3 space-y-1">
-                      {section.items.map((item) => (
-                        <li key={item} className="text-base text-gray-600 leading-relaxed">
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        {selectedVariant && !selectedVariant.availableForSale && (
-          <div className="bg-red-50 border border-red-200 rounded-none p-3">
-            <p className="text-sm text-red-700">
-              Esta combinación no está disponible actualmente.
-            </p>
-          </div>
-        )}
-
-        {/* 5. Observaciones */}
-        <div>
-          <h3 className="text-gray-900 text-xs font-medium mb-1 uppercase tracking-[0.12em]">
-            Observaciones{" "}
-            <span className="normal-case text-gray-400 font-normal">(opcional)</span>
-          </h3>
-          <p className="text-sm text-gray-400 mb-3">
-            ¿Algo que debamos tener en cuenta con tu pedido?
-          </p>
-          <textarea
-            value={notes}
-            onChange={(e) => setNotes(e.target.value.slice(0, MAX_NOTES_LENGTH))}
-            placeholder="Ej: el logo en un tono más oscuro, tallas por unidad…"
-            rows={3}
-            className="w-full px-3 py-2.5 rounded-none border border-gray-300 bg-white text-base text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors duration-200 resize-none"
-          />
-          <p className="text-xs text-gray-400 mt-1 text-right">
-            {notes.length}/{MAX_NOTES_LENGTH}
-          </p>
-        </div>
-
         <div>
           <h3 className="text-gray-900 text-xs font-medium mb-3 uppercase tracking-[0.12em]">
             Cantidad
@@ -553,6 +516,108 @@ export function ProductConfigurator({
           )}
         </div>
 
+        {/* Resumen de unidades por talla ya añadidas a la cesta */}
+        {sizeOption && Object.keys(cartQuantityBySize).length > 0 && (
+          <div>
+            <h3 className="text-gray-900 text-xs font-medium mb-3 uppercase tracking-[0.12em]">
+              Ya en tu cesta
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {sizeOption.values.map((value) => {
+                const count = cartQuantityBySize[value] ?? 0;
+                return (
+                  <span
+                    key={value}
+                    className={
+                      "flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-sm font-medium " +
+                      (count > 0
+                        ? "border-black text-black"
+                        : "border-gray-200 text-gray-400")
+                    }
+                  >
+                    {value}
+                    <span
+                      className={
+                        "flex items-center justify-center w-5 h-5 rounded-full text-xs font-semibold " +
+                        (count > 0
+                          ? "bg-black text-white"
+                          : "bg-gray-100 text-gray-400")
+                      }
+                    >
+                      {count}
+                    </span>
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Composición, estilo y cuidado */}
+        {details.length > 0 && (
+          <div className="border-t border-gray-200 pt-1">
+            {details.map((section) => {
+              const open = openDetail === section.title;
+              return (
+                <div key={section.title} className="border-b border-gray-200">
+                  <button
+                    type="button"
+                    aria-expanded={open}
+                    onClick={() => setOpenDetail(open ? null : section.title)}
+                    className="flex items-center justify-between w-full py-3 text-base font-medium text-black"
+                  >
+                    {section.title}
+                    <ChevronDown
+                      size={16}
+                      className={
+                        "transition-transform duration-200 " + (open ? "rotate-180" : "")
+                      }
+                    />
+                  </button>
+                  {open && (
+                    <ul className="pb-3 space-y-1">
+                      {section.items.map((item) => (
+                        <li key={item} className="text-base text-gray-600 leading-relaxed">
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {selectedVariant && !selectedVariant.availableForSale && (
+          <div className="bg-red-50 border border-red-200 rounded-none p-3">
+            <p className="text-sm text-red-700">
+              Esta combinación no está disponible actualmente.
+            </p>
+          </div>
+        )}
+
+        {/* 5. Observaciones */}
+        <div>
+          <h3 className="text-gray-900 text-xs font-medium mb-1 uppercase tracking-[0.12em]">
+            Observaciones{" "}
+            <span className="normal-case text-gray-400 font-normal">(opcional)</span>
+          </h3>
+          <p className="text-sm text-gray-400 mb-3">
+            ¿Algo que debamos tener en cuenta con tu pedido?
+          </p>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value.slice(0, MAX_NOTES_LENGTH))}
+            placeholder="Ej: el logo en un tono más oscuro, tallas por unidad…"
+            rows={3}
+            className="w-full px-3 py-2.5 rounded-none border border-gray-300 bg-white text-base text-black placeholder:text-gray-400 focus:outline-none focus:border-black transition-colors duration-200 resize-none"
+          />
+          <p className="text-xs text-gray-400 mt-1 text-right">
+            {notes.length}/{MAX_NOTES_LENGTH}
+          </p>
+        </div>
+
         {/* Resumen de pedido: siempre visible mientras se configura (manual de
             pricing, punto D). En desktop, sticky al fondo del viewport hasta
             llegar a su posición natural. */}
@@ -572,29 +637,24 @@ export function ProductConfigurator({
           </div>
 
           <div className="flex items-baseline justify-between text-base">
-            <p className="text-gray-500">
-              Precio unidad
-              {selectedZones.length > 0 && (
-                <span className="text-gray-400">
-                  {" "}
-                  ({formatEUR(unitPrice)} prenda + {formatEUR(customizationUnitPrice)} personalización)
-                </span>
-              )}
-            </p>
+            <p className="text-gray-500">Precio unidad</p>
             <p className="text-black font-medium">{formatEUR(unitTotal)}</p>
           </div>
 
           <div className="flex items-baseline justify-between pt-2 mt-1 border-t border-gray-200">
             <p className="text-gray-900 text-xs font-medium uppercase tracking-[0.12em]">
-              Total
+              Total{" "}
+              <span className="normal-case text-gray-400 font-normal">
+                ({combinedTotalUnits} uds)
+              </span>
             </p>
             <p className="font-display font-semibold text-black text-3xl leading-none tracking-tight">
-              {formatEUR(orderTotal)}{" "}
+              {formatEUR(combinedSubtotal)}{" "}
               <span className="text-gray-400 text-base font-normal">+ IVA</span>
             </p>
           </div>
           <p className="text-right text-gray-400 text-sm">
-            {formatEUR(orderTotalWithIva)} IVA ({Math.round(IVA_RATE * 100)}%) incluido
+            {formatEUR(combinedTotalWithIva)} IVA ({Math.round(IVA_RATE * 100)}%) incluido
           </p>
         </div>
 
@@ -613,11 +673,14 @@ export function ProductConfigurator({
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 px-5 py-4 pb-[calc(1rem+env(safe-area-inset-bottom))] flex items-center gap-4">
         <div className="flex-1 min-w-0">
           <p className="text-xs text-gray-500 truncate">
-            {quantity} ud{quantity > 1 ? "s" : ""} ·{" "}
-            {formatEUR(unitTotal * (1 + IVA_RATE))}/ud · IVA incluido
+            {quantity} ud{quantity > 1 ? "s" : ""} · {formatEUR(unitTotal)}/ud + IVA
           </p>
           <p className="font-display font-semibold text-black text-xl leading-tight truncate">
-            {formatEUR(orderTotalWithIva)}
+            {formatEUR(orderTotal)}{" "}
+            <span className="text-gray-400 text-sm font-normal">+ IVA</span>
+          </p>
+          <p className="text-[11px] text-gray-400 truncate">
+            {formatEUR(orderTotalWithIva)} IVA incluido
           </p>
         </div>
         <button

@@ -1,10 +1,13 @@
 import { Fragment } from "react";
-import { topBarMessages } from "@/config/site";
 import "./TopBar.css";
 
 const REPETITIONS = 6;
 
-export function TopBar() {
+interface TopBarProps {
+  messages: string[];
+}
+
+export function TopBar({ messages }: TopBarProps) {
   const separator = (
     <span className="mx-7 text-white/60 select-none" aria-hidden="true">
       ·
@@ -13,7 +16,7 @@ export function TopBar() {
 
   const bannerContent = (
     <>
-      {topBarMessages.map((message, index) => (
+      {messages.map((message, index) => (
         <Fragment key={message}>
           {index > 0 && separator}
           <span>{message}</span>
