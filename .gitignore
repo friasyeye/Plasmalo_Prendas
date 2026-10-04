@@ -50,3 +50,7 @@ temp/
 
 # Claude worktrees (agentes temporales)
 .claude/worktrees/
+
+# Archivos de sistema de Windows
+desktop.ini
+Thumbs.db
