@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import type { HomeCategory } from "@/config/home";
 
 interface SectorProductsProps {
@@ -28,11 +27,10 @@ export function SectorProducts({ sectorName, products }: SectorProductsProps) {
                   className="object-cover"
                 />
               </div>
-              <div className="flex justify-between items-center gap-2 pt-2 md:pt-3 pb-1">
+              <div className="pt-2 md:pt-3 pb-1">
                 <h3 className="text-card-title text-black truncate">
                   {name}
                 </h3>
-                <ArrowUpRight className="shrink-0 w-5 h-5 md:w-6 md:h-6 text-black" />
               </div>
             </>
           );
@@ -63,7 +61,7 @@ export function SectorProducts({ sectorName, products }: SectorProductsProps) {
           href="/brand-session"
           className="mt-6 inline-block w-fit rounded-full border border-black bg-black text-white px-5 py-2.5 text-[14px] font-medium hover:bg-transparent hover:text-black transition-colors"
         >
-          Reservar mi Brand Session →
+          Reservar mi Brand Session
         </Link>
       </div>
     </section>

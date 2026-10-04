@@ -128,14 +128,24 @@
     line-height: 1.1;
   }
 
-  /* Etiqueta subrayada sobre imagen (grid de prendas/categorías). */
+  /*
+   * Etiqueta subrayada sobre imagen (grid de prendas/categorías).
+   *
+   * El subrayado va con border-bottom, no text-decoration: estas tarjetas
+   * son <Link>/<a>, y el Preflight de Tailwind resetea `a { text-decoration:
+   * inherit }` — al heredar de un ancestro sin underline, anulaba el de esta
+   * clase pese a estar declarado. border-bottom no se ve afectado por esa
+   * herencia.
+   */
   .text-tile-label {
+    display: inline-block;
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.02em;
     text-transform: uppercase;
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 0px;
+    line-height: 1.2;
   }
 
   /* Navbar, footer, cualquier link de navegación. */
@@ -191,6 +201,12 @@
 .animate-marquee:hover,
 .animate-marquee:focus-within {
   animation-play-state: paused;
+}
+
+/* Variante que nunca se pausa al hover (ticker de MarqueeStrip). */
+.animate-marquee-no-pause:hover,
+.animate-marquee-no-pause:focus-within {
+  animation-play-state: running;
 }
 
 @media (prefers-reduced-motion: reduce) {

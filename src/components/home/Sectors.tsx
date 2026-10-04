@@ -37,7 +37,7 @@ export function Sectors({ sectors }: SectorsProps) {
 
               <div className="absolute inset-x-0 bottom-0 p-3 md:p-4">
                 <h3
-                  className="text-card-title text-white"
+                  className="text-section-title text-white"
                   style={{ textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}
                 >
                   {name}

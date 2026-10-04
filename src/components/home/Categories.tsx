@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import type { HomeCategory } from "@/config/home";
 
 interface CategoriesProps {
@@ -9,17 +8,8 @@ interface CategoriesProps {
 
 export function Categories({ categories }: CategoriesProps) {
   return (
-    <section className="bg-white px-4 md:px-8 py-12 md:py-16">
-      <div className="flex items-end justify-between gap-4 mb-6 md:mb-8">
-        <h2 className="text-section-title text-black">
-          Todo lo que tu marca necesita para destacar
-        </h2>
-        <button className="shrink-0 text-sm font-medium text-black bg-black/10 rounded-full px-4 py-2">
-          Ver todo
-        </button>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4">
+    <section className="bg-white pt-0.5">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-black/10">
         {categories.map(({ name, img, hoverImg, handle }) => {
           const card = (
             <>
@@ -28,7 +18,7 @@ export function Categories({ categories }: CategoriesProps) {
                   src={img}
                   alt={name}
                   fill
-                  sizes="(max-width: 768px) 50vw, 25vw"
+                  sizes="(max-width: 768px) 50vw, 20vw"
                   className={
                     hoverImg
                       ? "object-cover transition-opacity duration-300 group-hover:opacity-0"
@@ -40,16 +30,16 @@ export function Categories({ categories }: CategoriesProps) {
                     src={hoverImg}
                     alt={name}
                     fill
-                    sizes="(max-width: 768px) 50vw, 25vw"
+                    sizes="(max-width: 768px) 50vw, 20vw"
                     className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
                 )}
-              </div>
-              <div className="flex justify-between items-center gap-2 pt-2 md:pt-3 pb-1">
-                <h3 className="text-card-title text-black truncate">
-                  {name}
-                </h3>
-                <ArrowUpRight className="shrink-0 w-5 h-5 md:w-6 md:h-6 text-black" />
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 to-transparent" />
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4">
+                  <h3 className="text-tile-label text-white truncate">
+                    {name}
+                  </h3>
+                </div>
               </div>
             </>
           );

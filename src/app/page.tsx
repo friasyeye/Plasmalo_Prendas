@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/home/Hero";
 import { Categories } from "@/components/home/Categories";
 import { Sectors } from "@/components/home/Sectors";
+import { MarqueeStrip } from "@/components/home/MarqueeStrip";
 import { BrandSession } from "@/components/home/BrandSession";
 import { Testimonials } from "@/components/home/Testimonials";
 import { ResponsibleManufacturing } from "@/components/home/ResponsibleManufacturing";
@@ -28,6 +29,7 @@ export default async function Home() {
         <Hero />
         <Categories categories={categories} />
         <Sectors sectors={sectors} />
+        <MarqueeStrip />
         <BrandSession />
         <Testimonials />
         <ResponsibleManufacturing />
