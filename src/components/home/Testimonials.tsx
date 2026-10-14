@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { testimonials } from "@/config/home";
 
 export function Testimonials() {
@@ -21,43 +20,24 @@ export function Testimonials() {
       <div
         className="overflow-hidden -mx-4 md:-mx-8 px-4 md:px-8 [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]"
       >
-        <div className="flex w-max gap-6 animate-marquee">
-          {[...testimonials, ...testimonials].map((testimonial, index) => (
+        {/* El bucle recorre la mitad de la cinta (-50%): esa mitad debe ser más ancha
+            que cualquier pantalla (2 copias = 2×4×340 px), si no se ve un hueco a la
+            derecha. Duración doble para mantener la misma velocidad. */}
+        <div className="flex w-max animate-marquee animate-marquee-no-pause [animation-duration:80s]">
+          {[...testimonials, ...testimonials, ...testimonials, ...testimonials].map((testimonial, index) => (
             <div
               key={`${testimonial.name}-${index}`}
-              className="bg-white border border-gray-200 rounded-none p-10 w-[320px] md:w-[400px] shrink-0"
+              className="border-l border-black/10 px-6 py-2 md:px-8 w-[280px] md:w-[340px] shrink-0"
             >
-              {/* Top row: avatar + name/role */}
-              <div className="flex items-center gap-3 mb-6">
-                <div className="relative w-12 h-12 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    src={testimonial.avatar}
-                    alt={testimonial.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <p className="text-base font-semibold text-black leading-tight">
-                    {testimonial.name}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-tight">
-                    {testimonial.role}
-                  </p>
-                </div>
-              </div>
-
-              {/* Quote */}
-              <p
-                className="text-base text-black italic mb-5 leading-relaxed"
-              >
+              <p className="text-base text-black leading-relaxed mb-6">
                 {testimonial.quote}
               </p>
-
-              {/* Stars */}
-              <span style={{ color: "rgb(255, 193, 7)", fontSize: "1.25rem" }}>
-                ★★★★★
-              </span>
+              <p className="text-base font-semibold text-black leading-tight">
+                {testimonial.name}
+              </p>
+              <p className="text-sm text-gray-500 leading-tight">
+                {testimonial.role}
+              </p>
             </div>
           ))}
         </div>

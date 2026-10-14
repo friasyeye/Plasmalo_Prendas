@@ -4,13 +4,15 @@ interface BrandSessionProps {
   kicker?: string;
   title?: string;
   description?: string;
+  note?: string;
   cta?: string;
 }
 
 export function BrandSession({
   kicker = "Plásmalo Brand Session™",
   title = "Diseñamos la imagen que tu marca transmite",
-  description = "Analizamos tu marca y creamos una colección de merchandising alineada con quién eres. Gratis, sin compromiso, 30 minutos.",
+  description = "Para empresas que buscan algo único: analizamos tu marca y diseñamos una colección de merchandising hecha a tu medida.*",
+  note = "* Sesión de 30 minutos, gratuita y sin compromiso.",
   cta = "Reservar mi Brand Session",
 }: BrandSessionProps) {
   return (
@@ -25,9 +27,10 @@ export function BrandSession({
         <p className="mt-4 text-base md:text-lg text-white/70 max-w-md">
           {description}
         </p>
+        <p className="mt-3 text-xs text-white/50">{note}</p>
         <Link
           href="/brand-session"
-          className="mt-8 w-fit rounded-full border border-white bg-white text-black px-5 py-2.5 text-[14px] font-medium hover:bg-transparent hover:text-white transition-colors"
+          className="mt-8 w-fit rounded-full border border-white bg-white text-black px-5 py-2.5 text-[14px] font-medium hover:bg-white/85 hover:border-white/85 transition-colors"
         >
           {cta}
         </Link>
