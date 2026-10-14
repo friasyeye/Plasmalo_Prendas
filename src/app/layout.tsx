@@ -1,19 +1,27 @@
 import type { Metadata } from "next";
-import { Inter_Tight } from "next/font/google";
+import { Inter, Inter_Tight } from "next/font/google";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { TopBar } from "@/components/layout/TopBar";
 import { getTopBarMessages } from "@/lib/shopify/client";
 import "./globals.css";
 
 /*
- * Inter Tight es la ÚNICA familia de la web: toda la jerarquía sale de sus
- * pesos (400 cuerpo → 800 hero), no de mezclar fuentes. next/font/google la
- * auto-hospeda en build time, así que no hay petición a Google en runtime.
+ * Dos familias, como en evolucionia.com: Inter Tight para titulares
+ * (--font-inter-tight) e Inter para el cuerpo de texto (--font-inter).
+ * next/font/google las auto-hospeda en build time, así que no hay petición a
+ * Google en runtime.
  *
  * Los tamaños/pesos concretos viven en la escala tipográfica de globals.css
  * (.text-hero, .text-section-title, …). Los componentes usan esas clases en
  * lugar de declarar font-size o font-weight por su cuenta.
  */
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
 const interTight = Inter_Tight({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
@@ -41,7 +49,7 @@ export default async function RootLayout({
   const topBarMessages = await getTopBarMessages();
 
   return (
-    <html lang="es" className={interTight.variable}>
+    <html lang="es" className={`${inter.variable} ${interTight.variable}`}>
       <body className="min-h-full">
         <TopBar messages={topBarMessages} />
         {children}
