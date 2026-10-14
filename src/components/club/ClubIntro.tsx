@@ -1,31 +1,37 @@
+import Image from "next/image";
 import { clubIntro } from "@/config/club";
 
 export function ClubIntro() {
   return (
-    <section className="bg-black">
-      <div className="grid md:grid-cols-2">
-        <div className="flex flex-col justify-center px-6 md:px-16 py-16 md:py-24 md:min-h-[640px] order-2 md:order-1">
-          <span
-            className="text-sm text-white/60 tracking-[0.08em] mb-4"
-          >
+    // pt = padding original + 4rem del navbar, que va encima en modo "overlay".
+    <section className="bg-black px-4 md:px-8 pt-32 md:pt-40">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="max-w-[26ch] text-hero text-white">{clubIntro.title}</h1>
+
+        <div className="mt-8 md:mt-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-12 pb-6 border-b border-white/30">
+          <div className="max-w-xl">
+            <p className="text-base text-white/85 leading-relaxed">
+              {clubIntro.subtitle}
+            </p>
+            <p className="mt-3 text-base text-white/60 leading-relaxed">
+              {clubIntro.description}
+            </p>
+          </div>
+
+          <span className="self-start md:self-auto shrink-0 whitespace-nowrap border-l-2 border-white/60 pl-4 py-2 text-sm font-medium text-white tracking-[0.08em]">
             {clubIntro.kicker}
           </span>
-          <h1 className="text-hero text-white max-w-lg">
-            {clubIntro.title}
-          </h1>
-          <p
-            className="mt-3 text-base md:text-lg text-white/80 max-w-lg"
-          >
-            {clubIntro.subtitle}
-          </p>
-          <p
-            className="mt-6 text-sm md:text-base text-white/60 max-w-md leading-relaxed"
-          >
-            {clubIntro.description}
-          </p>
         </div>
 
-        <div className="relative aspect-4/5 md:aspect-auto md:min-h-[640px] bg-[rgb(30,30,30)] order-1 md:order-2" />
+        <div className="relative mt-8 md:mt-12 aspect-video md:aspect-21/9 overflow-hidden">
+          <Image
+            src="/images/club-plasmalo-mesa-de-trabajo.png"
+            alt="Mesa de trabajo con prendas, muestras de tela y bocetos de una colección de merchandising"
+            fill
+            sizes="(min-width: 1152px) 72rem, 100vw"
+            className="object-cover object-center"
+          />
+        </div>
       </div>
     </section>
   );

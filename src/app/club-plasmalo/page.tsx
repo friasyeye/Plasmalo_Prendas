@@ -3,17 +3,15 @@ import { Footer } from "@/components/layout/Footer";
 import { ClubIntro } from "@/components/club/ClubIntro";
 import { ClubTimeline } from "@/components/club/ClubTimeline";
 import { ClubBenefits } from "@/components/club/ClubBenefits";
-import { ClubClosing } from "@/components/club/ClubClosing";
 
 export default function ClubPlasmaloPage() {
   return (
     <>
-      <Navbar />
+      <Navbar variant="overlay" />
       <main>
         <ClubIntro />
         <ClubTimeline />
         <ClubBenefits />
-        <ClubClosing />
       </main>
       <Footer />
     </>

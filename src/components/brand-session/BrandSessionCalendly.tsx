@@ -1,66 +1,44 @@
 "use client";
 
+import { useRef } from "react";
 import Script from "next/script";
-import { brandSessionCalendly, brandSessionProcess } from "@/config/brand-session";
 
-const CALENDLY_URL = "https://calendly.com/plasmaloprendas/30min";
+// Colores del widget: fondo negro y texto blanco para integrarlo en la sección oscura.
+const CALENDLY_URL =
+  "https://calendly.com/plasmaloprendas/30min?hide_gdpr_banner=1&background_color=000000&text_color=ffffff&primary_color=ffffff";
+
+declare global {
+  interface Window {
+    Calendly?: {
+      initInlineWidget: (options: { url: string; parentElement: HTMLElement }) => void;
+    };
+  }
+}
 
 export function BrandSessionCalendly() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // widget.js solo busca los `.calendly-inline-widget` al cargarse. Con navegación
+  // interna (Link) el script ya está cargado y no vuelve a ejecutarse, así que el
+  // widget quedaba vacío. `onReady` se dispara en cada montaje y lo inicializamos
+  // a mano; vaciar el contenedor evita un segundo iframe (React Strict Mode).
+  const initWidget = () => {
+    const container = containerRef.current;
+    if (!container || !window.Calendly) return;
+    container.replaceChildren();
+    window.Calendly.initInlineWidget({ url: CALENDLY_URL, parentElement: container });
+  };
+
   return (
-    <section className="bg-[rgb(245,245,245)] px-4 md:px-8 py-16 md:py-20">
-      <div className="max-w-4xl mx-auto">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-section-title text-black">
-            {brandSessionCalendly.title}
-          </h2>
-          <p
-            className="mt-3 text-base text-black/60"
-          >
-            {brandSessionCalendly.description}
-          </p>
-        </div>
-
-        <div className="mt-8 bg-white border border-black/10 p-2 md:p-4">
-          <div
-            className="calendly-inline-widget w-full"
-            data-url={CALENDLY_URL}
-            style={{ minWidth: "0", height: "700px" }}
-          />
-          <Script src="https://assets.calendly.com/assets/external/widget.js" strategy="afterInteractive" />
-        </div>
-
-        <div className="mt-12 md:mt-14 border-t border-black/10 pt-6">
-          <span
-            className="text-xs text-black/40 tracking-[0.08em] uppercase"
-          >
-            Qué incluye la sesión
-          </span>
-
-          <div className="mt-4 flex flex-col">
-            {brandSessionProcess.map(({ title, description }, index) => (
-              <div
-                key={title}
-                className="flex flex-col md:flex-row md:items-center gap-1 md:gap-8 py-4 border-b border-black/10 last:border-b-0"
-              >
-                <div className="flex items-center gap-4 md:contents">
-                  <span
-                    className="text-xs text-black/40 w-6 shrink-0"
-                  >
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <span className="text-card-title text-black md:w-56 shrink-0">
-                    {title}
-                  </span>
-                </div>
-                <span
-                  className="pl-10 md:pl-0 text-sm text-black/60"
-                >
-                  {description}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+    <section className="bg-black px-4 md:px-8">
+      {/* El margen negativo compensa el margen superior propio del iframe de Calendly. */}
+      <div className="max-w-6xl mx-auto -mt-4 md:-mt-8">
+        <div ref={containerRef} className="w-full min-w-0 h-175" />
+        <Script
+          src="https://assets.calendly.com/assets/external/widget.js"
+          strategy="afterInteractive"
+          onReady={initWidget}
+        />
       </div>
     </section>
   );

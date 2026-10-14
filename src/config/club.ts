@@ -15,7 +15,7 @@ export const clubIntro = {
 
 export const clubHowItWorks = {
   intro:
-    "Planificamos contigo el calendario de tu imagen para todo el año. Tú eliges la cadencia —mensual o trimestral— y nosotros nos encargamos de que el merch llegue a tiempo, según la estacionalidad de tu negocio y tus eventos clave.",
+    "Planificamos contigo el calendario de tu imagen para todo el año. Tú eliges la regularidad (mensual o trimestral) y nosotros nos encargamos de que el merch llegue a tiempo, según la estacionalidad de tu negocio y tus eventos clave.",
   flexibility:
     "¿Tienes una feria o un pico de contrataciones? Adelantamos o ajustamos la entrega sin que tengas que gestionarlo tú.",
   exampleLabel: "Un ejemplo de año tipo",
@@ -42,13 +42,7 @@ export const clubBenefits: string[] = [
 export const clubBenefitsClosing =
   "Pertenecer al Club Plásmalo deja de ser un problema para ti.";
 
-export const clubClosing = {
-  title: "Tu imagen, todo el año, sin gestionarla tú.",
-  dossierCta: "Descargar dossier",
-  dossierHref: "#",
-  calendlyCta: "Agendar una llamada",
-  calendlyHref: "#",
-  brandSessionNote: "¿Aún no nos conoces?",
-  brandSessionCta: "Empieza con una Brand Session gratuita",
-  brandSessionHref: "/brand-session",
+export const clubDossier = {
+  cta: "Descargar dossier",
+  href: "#",
 };
