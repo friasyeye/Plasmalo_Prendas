@@ -3,6 +3,7 @@ import { Inter, Inter_Tight } from "next/font/google";
 import { CartDrawer } from "@/components/cart/CartDrawer";
 import { TopBar } from "@/components/layout/TopBar";
 import { getTopBarMessages } from "@/lib/shopify/client";
+import { siteUrl } from "@/config/site";
 import "./globals.css";
 
 /*
@@ -30,6 +31,7 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Plásmalo | Ropa Personalizada para Empresas y Eventos",
   description: "Personaliza ropa y merchandising para tu empresa o evento. DTF, bordado y diseño a medida,   ▷ Sin pedido mínimo. Envíos a toda España.",
   icons: {
