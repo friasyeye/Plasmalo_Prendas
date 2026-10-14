@@ -1,15 +1,32 @@
 import { getShopifyConfig } from "@/config/env";
-import { getFeaturedProductsQuery } from "./queries/collections";
-import { getProductQuery } from "./queries/product";
+import {
+  getCollectionQuery,
+  getCollectionsHaveProductsQuery,
+  getFeaturedProductsQuery,
+} from "./queries/collections";
+import {
+  getProductPhotosQuery,
+  getProductQuery,
+  getProductVariantsPageQuery,
+} from "./queries/product";
 import { getTopBarMessagesQuery } from "./queries/shop";
-import { toHomeFeaturedCategories, toProduct, toTopBarMessages } from "./adapters";
+import {
+  toCatalogCollection,
+  toHomeFeaturedProducts,
+  toProduct,
+  toProductPhoto,
+  toTopBarMessages,
+} from "./adapters";
 import type {
+  ShopifyCollectionResponse,
+  ShopifyCollectionsHaveProductsResponse,
   ShopifyFeaturedProductsResponse,
+  ShopifyProductPhotosResponse,
   ShopifyProductResponse,
+  ShopifyProductVariantsPageResponse,
   ShopifyTopBarMessagesResponse,
 } from "./types";
-import type { HomeCategory } from "@/config/home";
-import type { Product } from "@/types";
+import type { CatalogCollection, Product, ProductImage, ProductSummary } from "@/types";
 import { topBarMessages as topBarMessagesFallback } from "@/config/site";
 
 /**
@@ -73,25 +90,105 @@ export async function shopifyFetch<TData>({
 const FEATURED_COLLECTION_HANDLE = "destacados";
 
 /**
- * Hasta 4 productos de la colección "destacados" (gestionada por el cliente
- * desde el admin de Shopify), listos para pintarse en Categories.tsx.
- * Devuelve [] si la colección no existe, está vacía, o falla la petición;
- * la Home rellena los huecos con placeholders hasta completar 4 tarjetas.
+ * Foto de un producto para una tarjeta (Home): la primera del color pedido o,
+ * si no se pide color o no existe, la portada. Consulta ligera (solo fotos).
+ * Devuelve null si el producto no existe o falla la petición.
  */
-export async function getFeaturedProducts(): Promise<HomeCategory[]> {
+export async function getProductPhoto(
+  handle: string,
+  color?: string
+): Promise<ProductImage | null> {
+  try {
+    const data = await shopifyFetch<ShopifyProductPhotosResponse>({
+      query: getProductPhotosQuery,
+      variables: { handle },
+    });
+    return toProductPhoto(data, color);
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Hasta 12 productos de la colección "destacados" (gestionada por el cliente
+ * desde el admin de Shopify; el orden de la colección es el de la fila de la
+ * Home). `photoColors` (handle -> color) es opcional: solo los productos que
+ * aparezcan ahí piden una foto de color concreto, el resto usa su portada, así
+ * que cambiar los productos de la colección nunca rompe nada.
+ * Devuelve [] si la colección no existe, está vacía, o falla la petición;
+ * la Home no pinta la fila.
+ */
+export async function getFeaturedProducts(
+  photoColors: Record<string, string> = {}
+): Promise<ProductSummary[]> {
   try {
     const data = await shopifyFetch<ShopifyFeaturedProductsResponse>({
       query: getFeaturedProductsQuery,
       variables: { handle: FEATURED_COLLECTION_HANDLE },
     });
-    return toHomeFeaturedCategories(data);
+    return await Promise.all(
+      toHomeFeaturedProducts(data).map(async (product) => {
+        const color = photoColors[product.handle];
+        if (!color) return product;
+        const image = await getProductPhoto(product.handle, color);
+        return image ? { ...product, image } : product;
+      })
+    );
   } catch {
     return [];
   }
 }
 
 /**
- * Producto completo para /product/[handle], incluyendo su tabla de tramos
+ * Una colección con TODOS sus productos (en el orden del admin), para los
+ * listados de catálogo. Shopify devuelve máx. 250 por petición: se piden las
+ * páginas restantes y se juntan antes de traducir.
+ *
+ * Devuelve null si la colección no existe (la página hace notFound). Los
+ * errores de red/API se propagan a propósito: un listado vacío por un fallo
+ * puntual se confundiría con "no hay productos" y quedaría en caché.
+ */
+export async function getCollection(handle: string): Promise<CatalogCollection | null> {
+  const data = await shopifyFetch<ShopifyCollectionResponse>({
+    query: getCollectionQuery,
+    variables: { handle },
+  });
+  if (!data.collection) return null;
+
+  let { pageInfo } = data.collection.products;
+  while (pageInfo.hasNextPage && pageInfo.endCursor) {
+    const page = await shopifyFetch<ShopifyCollectionResponse>({
+      query: getCollectionQuery,
+      variables: { handle, after: pageInfo.endCursor },
+    });
+    if (!page.collection) break;
+    data.collection.products.nodes.push(...page.collection.products.nodes);
+    pageInfo = page.collection.products.pageInfo;
+  }
+
+  return toCatalogCollection(data);
+}
+
+/**
+ * De una lista de handles de colección, los que tienen al menos un producto
+ * (la franja de categorías no enseña categorías vacías). Una sola petición.
+ * Si falla, devuelve todos: mejor una categoría vacía que quedarse sin franja.
+ */
+export async function getNonEmptyCollections(handles: string[]): Promise<Set<string>> {
+  if (handles.length === 0) return new Set();
+  try {
+    const data = await shopifyFetch<ShopifyCollectionsHaveProductsResponse>({
+      query: getCollectionsHaveProductsQuery(handles.length),
+      variables: Object.fromEntries(handles.map((handle, i) => [`h${i}`, handle])),
+    });
+    return new Set(handles.filter((_, i) => (data[`c${i}`]?.products.nodes.length ?? 0) > 0));
+  } catch {
+    return new Set(handles);
+  }
+}
+
+/**
+ * Producto completo para su ficha (/prendas/[categoria]/[handle]), incluyendo su tabla de tramos
  * de precio (leída del metaobjeto enlazado vía el metacampo
  * custom.tabla_de_precios). Devuelve null si el producto no existe.
  *
@@ -103,11 +200,28 @@ export async function getProduct(
   handle: string,
   options?: { revalidate?: number }
 ): Promise<Product | null> {
+  const revalidate = options?.revalidate;
   const data = await shopifyFetch<ShopifyProductResponse>({
     query: getProductQuery,
     variables: { handle },
-    revalidate: options?.revalidate,
+    revalidate,
   });
+  if (!data.product) return null;
+
+  // Shopify devuelve máx. 250 variantes por petición: se piden las páginas
+  // restantes y se juntan antes de traducir.
+  let { pageInfo } = data.product.variants;
+  while (pageInfo.hasNextPage && pageInfo.endCursor) {
+    const page = await shopifyFetch<ShopifyProductVariantsPageResponse>({
+      query: getProductVariantsPageQuery,
+      variables: { handle, after: pageInfo.endCursor },
+      revalidate,
+    });
+    if (!page.product) break;
+    data.product.variants.nodes.push(...page.product.variants.nodes);
+    pageInfo = page.product.variants.pageInfo;
+  }
+
   return toProduct(data);
 }
 

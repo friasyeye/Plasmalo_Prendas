@@ -9,8 +9,8 @@ interface CategoriesProps {
 export function Categories({ categories }: CategoriesProps) {
   return (
     <section className="bg-white pt-0.5">
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-black/10">
-        {categories.map(({ name, img, hoverImg, handle }) => {
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-black/10">
+        {categories.map(({ name, img, hoverImg, href }) => {
           const card = (
             <>
               <div className="relative aspect-2/3 bg-[rgb(245,245,245)] overflow-hidden">
@@ -18,7 +18,7 @@ export function Categories({ categories }: CategoriesProps) {
                   src={img}
                   alt={name}
                   fill
-                  sizes="(max-width: 768px) 50vw, 20vw"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                   className={
                     hoverImg
                       ? "object-cover transition-opacity duration-300 group-hover:opacity-0"
@@ -30,7 +30,7 @@ export function Categories({ categories }: CategoriesProps) {
                     src={hoverImg}
                     alt={name}
                     fill
-                    sizes="(max-width: 768px) 50vw, 20vw"
+                    sizes="(max-width: 768px) 50vw, 25vw"
                     className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                   />
                 )}
@@ -44,8 +44,8 @@ export function Categories({ categories }: CategoriesProps) {
             </>
           );
 
-          return handle ? (
-            <Link key={name} href={`/product/${handle}`} className="group">
+          return href ? (
+            <Link key={name} href={href} className="group">
               {card}
             </Link>
           ) : (

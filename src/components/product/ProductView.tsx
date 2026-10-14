@@ -1,8 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import type { PriceTier, ProductImage, ProductOption, ProductVariant } from "@/types";
-import type { Customization, ProductDetailSection } from "@/config/pricing";
+import type {
+  PriceTier,
+  ProductDetailSection,
+  ProductImage,
+  ProductOption,
+  ProductVariant,
+} from "@/types";
+import type { Customization } from "@/config/pricing";
 import { ProductGallery } from "./ProductGallery";
 import { ProductConfigurator } from "./ProductConfigurator";
 
@@ -11,6 +17,8 @@ interface ProductViewProps {
   title: string;
   description: string;
   featuredImage?: ProductImage;
+  /** Todas las fotos del producto; las de cada color llevan alt "<Título> - <Color>". */
+  images: ProductImage[];
   priceTiers: PriceTier[];
   customizations: Customization[];
   details: ProductDetailSection[];
@@ -21,14 +29,16 @@ interface ProductViewProps {
 /**
  * Componente cliente que comparte el estado de las opciones seleccionadas
  * entre la galería y el configurador. La galería muestra las fotos del color
- * activo (metacampo custom.galeria de la variante); al cambiar de color se
- * cambia la galería entera y se vuelve a la primera foto.
+ * activo (las imágenes del producto cuyo texto alternativo termina en
+ * " - <Color>"); al cambiar de color se cambia la galería entera y se vuelve
+ * a la primera foto.
  */
 export function ProductView({
   productHandle,
   title,
   description,
   featuredImage,
+  images,
   priceTiers,
   customizations,
   details,
@@ -46,22 +56,28 @@ export function ProductView({
   const colorOption = options.find((option) => /color|colour/i.test(option.name));
   const selectedColor = colorOption ? selectedOptions[colorOption.name] : undefined;
 
-  // Fotos del color activo: la galería del metacampo si alguna variante del
-  // color la tiene; si no, su portada de variante; si no, featuredImage.
+  // Fotos del color activo: las del producto etiquetadas con ese color; si no
+  // hay (producto sin fotos por color), su portada de variante; si no,
+  // featuredImage.
   const colorVariants = colorOption
     ? variants.filter(
         (variant) => variant.selectedOptions[colorOption.name] === selectedColor
       )
     : variants;
 
-  const metafieldGallery = colorVariants.find(
-    (variant) => variant.galleryImages.length > 0
-  )?.galleryImages;
+  const colorImages = selectedColor
+    ? images.filter((image) => image.altText?.endsWith(` - ${selectedColor}`))
+    : [];
   const coverImage = colorVariants.find((variant) => variant.image)?.image;
 
   const galleryImages =
-    metafieldGallery ??
-    (coverImage ? [coverImage] : featuredImage ? [featuredImage] : []);
+    colorImages.length > 0
+      ? colorImages
+      : coverImage
+        ? [coverImage]
+        : featuredImage
+          ? [featuredImage]
+          : [];
 
   const activeIndex = Math.min(
     activeImageIndex,

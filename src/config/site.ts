@@ -29,6 +29,12 @@ export const navMerchandising = [
 ];
 
 /**
+ * Dominio de producción. Base de las URLs absolutas de los metadatos
+ * (canónicas, Open Graph): una canónica debe llevar el dominio completo.
+ */
+export const siteUrl = "https://plasmalo.es";
+
+/**
  * Fallback si el metafield custom.topbar_messages (Shop, Shopify) no existe
  * o falla la petición. La fuente de verdad real la gestiona el cliente desde
  * el admin de Shopify (ver getTopBarMessages en lib/shopify/client.ts).
@@ -46,9 +52,9 @@ export interface FooterLink {
 
 export const footerLinks: { catalogo: FooterLink[]; legal: FooterLink[] } = {
   catalogo: [
-    { label: "Camisetas", href: "#" },
-    { label: "Sudaderas", href: "#" },
-    { label: "Polos", href: "#" },
+    { label: "Camisetas", href: "/prendas/camisetas" },
+    { label: "Sudaderas", href: "/prendas/sudaderas" },
+    { label: "Polos", href: "/prendas/polos" },
   ],
   legal: [
     { label: "FAQ", href: "#" },

@@ -33,17 +33,41 @@ export interface ShopifyTopBarMessagesResponse {
   };
 }
 
+/** Producto para una tarjeta (productSummaryFields en collections.ts). */
+export interface ShopifyProductSummary {
+  handle: string;
+  title: string;
+  productType: string;
+  tags: string[];
+  collections: { nodes: Array<{ handle: string }> };
+  featuredImage: ShopifyImage | null;
+  options: ShopifyProductOption[];
+}
+
 /** Respuesta cruda de getFeaturedProductsQuery (collections.ts). */
 export interface ShopifyFeaturedProductsResponse {
   collection: {
+    products: { nodes: ShopifyProductSummary[] };
+  } | null;
+}
+
+/** Respuesta cruda de getCollectionsHaveProductsQuery: un alias (c0, c1…) por colección. */
+export type ShopifyCollectionsHaveProductsResponse = Record<
+  string,
+  { products: { nodes: Array<{ id: string }> } } | null
+>;
+
+/** Respuesta cruda de getCollectionQuery (collections.ts): una página. */
+export interface ShopifyCollectionResponse {
+  collection: {
+    handle: string;
+    title: string;
+    /** Descripción en texto plano (sin HTML). */
+    description: string;
+    seo: { title: string | null; description: string | null };
     products: {
-      nodes: Array<{
-        handle: string;
-        title: string;
-        images: {
-          nodes: ShopifyImage[];
-        };
-      }>;
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      nodes: ShopifyProductSummary[];
     };
   } | null;
 }
@@ -69,15 +93,16 @@ export interface ShopifyProductVariant {
   availableForSale: boolean;
   selectedOptions: ShopifySelectedOption[];
   image: ShopifyImage | null;
-  /**
-   * Metacampo custom.galeria (lista de archivos): las fotos de la variante.
-   * Los nodos que no sean MediaImage llegan como objeto vacío (image ausente).
-   */
-  gallery: {
-    references: {
-      nodes: Array<{ image?: ShopifyImage | null }>;
-    } | null;
-  } | null;
+}
+
+export interface ShopifyVariantsConnection {
+  pageInfo: { hasNextPage: boolean; endCursor: string | null };
+  nodes: ShopifyProductVariant[];
+}
+
+/** Respuesta cruda de getProductVariantsPageQuery (product.ts). */
+export interface ShopifyProductVariantsPageResponse {
+  product: { variants: ShopifyVariantsConnection } | null;
 }
 
 export interface ShopifyProductOption {
@@ -128,11 +153,12 @@ export interface ShopifyProductResponse {
     handle: string;
     title: string;
     description: string;
+    descriptionHtml: string;
+    collections: { nodes: Array<{ handle: string }> };
     featuredImage: ShopifyImage | null;
+    images: { nodes: ShopifyImage[] };
     options: ShopifyProductOption[];
-    variants: {
-      nodes: ShopifyProductVariant[];
-    };
+    variants: ShopifyVariantsConnection;
     pricingTable: {
       reference: {
         field: {
@@ -142,5 +168,13 @@ export interface ShopifyProductResponse {
         } | null;
       } | null;
     } | null;
+  } | null;
+}
+
+/** Respuesta cruda de getProductPhotosQuery (product.ts). */
+export interface ShopifyProductPhotosResponse {
+  product: {
+    featuredImage: ShopifyImage | null;
+    images: { nodes: ShopifyImage[] };
   } | null;
 }

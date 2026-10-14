@@ -3,8 +3,13 @@
 import { useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
-import type { PriceTier, ProductOption, ProductVariant } from "@/types";
-import type { Customization, ProductDetailSection } from "@/config/pricing";
+import type {
+  PriceTier,
+  ProductDetailSection,
+  ProductOption,
+  ProductVariant,
+} from "@/types";
+import type { Customization } from "@/config/pricing";
 import { IVA_RATE } from "@/config/pricing";
 import {
   getUnitPriceForQuantity,
@@ -13,6 +18,7 @@ import {
 } from "@/lib/pricing/tiered-pricing";
 import { formatEUR } from "@/lib/format";
 import { useCart } from "@/hooks/use-cart";
+import { swatchBackground } from "@/lib/colors";
 
 interface ProductConfiguratorProps {
   /** Handle del producto: identidad de línea y agregación de tramos en el carrito. */
@@ -37,6 +43,11 @@ const ACCEPTED_DESIGN_TYPES = [
 ];
 const MAX_DESIGN_FILE_SIZE_MB = 20;
 
+// Con muchos colores (p. ej. 43) se enseñan los primeros y el resto se
+// despliega con un botón. Si hay pocos de más no compensa plegar ("+2").
+const COLORS_COLLAPSE_ABOVE = 15;
+const COLORS_PREVIEW_COUNT = 12;
+
 export function ProductConfigurator({
   productHandle,
   title,
@@ -52,6 +63,7 @@ export function ProductConfigurator({
   const { lines: cartLines, pricing: cartPricing, addToCart, openCart } = useCart();
   const [quantity, setQuantity] = useState(1);
   const [openDetail, setOpenDetail] = useState<string | null>(null);
+  const [colorsExpanded, setColorsExpanded] = useState(false);
   const [selectedZones, setSelectedZones] = useState<string[]>(() => {
     if (customizations.length === 0) return [];
     const cheapest = customizations.reduce((min, c) =>
@@ -141,20 +153,35 @@ export function ProductConfigurator({
   const colorOption = options.find((option) => /color|colour/i.test(option.name));
 
   function renderColorOption(option: ProductOption) {
+    const selected = selectedOptions[option.name];
+    const collapsible = option.values.length > COLORS_COLLAPSE_ABOVE;
+    const hiddenCount = option.values.length - COLORS_PREVIEW_COUNT;
+
+    // Plegado: los primeros + el color elegido aunque esté más allá.
+    const visibleValues =
+      collapsible && !colorsExpanded
+        ? option.values.filter(
+            (value, index) => index < COLORS_PREVIEW_COUNT || value === selected
+          )
+        : option.values;
+
     return (
       <div key={option.name}>
         <h3 className="text-black text-base font-medium mb-3">
-          {selectedOptions[option.name] ?? option.name}
+          {selected ?? option.name}
         </h3>
-        <div className="flex flex-wrap gap-2.5">
-          {option.values.map((value) => {
-            const active = selectedOptions[option.name] === value;
-            const swatchImage = findVariantImage(option.name, value);
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5">
+          {visibleValues.map((value) => {
+            const active = selected === value;
+            const background = swatchBackground(value);
+            const swatchImage = background ? undefined : findVariantImage(option.name, value);
             return (
               <button
                 key={value}
                 type="button"
                 aria-label={value}
+                title={value}
+                aria-pressed={active}
                 onClick={() => onSelectOption(option.name, value)}
                 className={
                   "pb-1.5 border-b transition-colors duration-200 " +
@@ -163,24 +190,38 @@ export function ProductConfigurator({
                     : "border-transparent hover:border-gray-300")
                 }
               >
-                <span className="relative block w-14 h-14 overflow-hidden">
+                <span
+                  className="relative block w-9 h-9 overflow-hidden rounded-full ring-1 ring-black/10"
+                  style={background ? { background } : undefined}
+                >
                   {swatchImage ? (
                     <Image
                       src={swatchImage.url}
                       alt={value}
                       fill
-                      sizes="56px"
+                      sizes="36px"
                       className="object-cover"
                     />
-                  ) : (
+                  ) : null}
+                  {!background && !swatchImage ? (
                     <span className="w-full h-full flex items-center justify-center bg-gray-100 text-[11px] text-gray-500">
                       {value.slice(0, 2)}
                     </span>
-                  )}
+                  ) : null}
                 </span>
               </button>
             );
           })}
+          {collapsible && (
+            <button
+              type="button"
+              onClick={() => setColorsExpanded((open) => !open)}
+              aria-expanded={colorsExpanded}
+              className="pb-1.5 text-sm text-gray-600 underline underline-offset-4 hover:text-black transition-colors"
+            >
+              {colorsExpanded ? "Ver menos" : `+${hiddenCount} colores`}
+            </button>
+          )}
         </div>
       </div>
     );

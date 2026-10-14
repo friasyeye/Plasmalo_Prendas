@@ -19,11 +19,21 @@ export interface PriceTier {
 
 /** Producto del catálogo, ya traducido desde Shopify a nuestro dominio. */
 export interface Product {
-  /** Slug del producto en Shopify; se usa en la URL /product/[handle]. */
+  /** Slug del producto en Shopify; última parte de su URL (/prendas/polos/[handle]). */
   handle: string;
   title: string;
+  /** Handles de las colecciones de Shopify en las que está: deciden su categoría. */
+  collections: string[];
+  /** Texto introductorio (primer párrafo de la descripción en Shopify). */
   description: string;
+  /** Secciones tipo "Composición" / "Detalles", leídas de la descripción. */
+  details: ProductDetailSection[];
   featuredImage?: ProductImage;
+  /**
+   * Todas las fotos del producto. Las de cada color llevan el texto
+   * alternativo "<Título> - <Color>" (ver ProductView para la agrupación).
+   */
+  images: ProductImage[];
   /** Opciones de variante disponibles, p. ej. { name: "Talla", values: ["S","M","L"] }. */
   options: ProductOption[];
   variants: ProductVariant[];
@@ -42,11 +52,12 @@ export interface ProductVariant {
   /** p. ej. { Talla: "M", Color: "Negro" } */
   selectedOptions: Record<string, string>;
   image?: ProductImage;
-  /**
-   * Fotos de la variante (metacampo custom.galeria). Solo una variante por
-   * color las lleva rellenas; la galería del color se busca en cualquiera.
-   */
-  galleryImages: ProductImage[];
+}
+
+/** Una sección desplegable de la ficha: título + lista de líneas. */
+export interface ProductDetailSection {
+  title: string;
+  items: string[];
 }
 
 export interface ProductImage {
@@ -91,4 +102,40 @@ export interface CartLine {
    */
   designFileName: string | null;
   notes: string;
+}
+
+/**
+ * Producto resumido para una tarjeta: fila de la Home y listados de catálogo.
+ * Lleva lo que pinta la tarjeta y lo que usan los filtros.
+ */
+export interface ProductSummary {
+  handle: string;
+  title: string;
+  /** Tipo de producto en Shopify, p. ej. "Sudadera con capucha". */
+  productType: string;
+  /** Etiquetas de Shopify (sectores, género, "SOL'S", "Ref. …"). */
+  tags: string[];
+  /** Handles de las colecciones de Shopify en las que está: deciden su categoría. */
+  collections: string[];
+  image: ProductImage;
+  /** Valores de la opción "Color", en el orden del producto (el primero es la portada). */
+  colors: string[];
+}
+
+/** Producto resumido con su URL ya resuelta (ver lib/catalog/paths.ts). */
+export interface CatalogProduct extends ProductSummary {
+  /** p. ej. "/prendas/polos/polo-pacific". */
+  path: string;
+}
+
+/** Una colección de Shopify con todos sus productos, en el orden del admin. */
+export interface CatalogCollection {
+  handle: string;
+  title: string;
+  /** Texto de la colección (campo Descripción del admin), sin HTML. */
+  description: string;
+  /** SEO de la colección en el admin; vacío = se usan título y descripción. */
+  seoTitle: string | null;
+  seoDescription: string | null;
+  products: ProductSummary[];
 }

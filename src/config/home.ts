@@ -11,21 +11,36 @@ export interface HomeCategory {
   img: string;
   /** Segunda imagen (p. ej. de un producto real de Shopify) que sustituye a `img` en hover. */
   hoverImg?: string;
-  /** Slug del producto en Shopify; si existe, la tarjeta enlaza a /product/[handle]. */
+  /** Destino de la tarjeta; sin él, la tarjeta no es un enlace. */
+  href?: string;
+  /** Compatibilidad temporal con la página de sector antigua (se elimina con ella). */
   handle?: string;
 }
 
 /**
- * Placeholders estáticos del grid "Elige la prenda y hazla tuya". La Home
- * (src/app/page.tsx) pinta los productos reales de la colección "destacados"
- * de Shopify y rellena con estos placeholders hasta completar 4 tarjetas.
+ * Las 4 categorías del grid "Elige la prenda y hazla tuya". La foto de cada
+ * tarjeta es la portada de un producto real de Shopify (`photoHandle`), así que
+ * se cambia desde el admin. `photoColor` (opcional) elige la foto de ese color;
+ * sin él, la portada. Orden pensado para la temporada (invierno).
  */
-export const placeholderHomeCategories: HomeCategory[] = [
-  { name: "Sudaderas", img: "/fabfit/category-accessories.png" },
-  { name: "Gorras", img: "/fabfit/category-sports.png" },
-  { name: "Bolsas y tote bags", img: "/fabfit/product-grey-comfort.png" },
-  { name: "Botellas y tazas", img: "/fabfit/product-grey-comfort.png" },
+export const homeCategories = [
+  { name: "Sudaderas", href: "/prendas/sudaderas", photoHandle: "sudadera-con-capucha-slam", photoColor: "Negro" },
+  { name: "Chaquetas", href: "/prendas/chaquetas", photoHandle: "chaqueta-softshell-replay-men" },
+  { name: "Polos", href: "/prendas/polos", photoHandle: "polo-pacific", photoColor: "Negro" },
+  { name: "Camisetas", href: "/prendas/camisetas", photoHandle: "camiseta-regent", photoColor: "Gris oscuro" },
 ];
+
+/**
+ * Color de la foto en la fila de productos de la Home (handle -> color). Solo
+ * los productos listados piden ese color; el resto usa su portada. La lista de
+ * productos y su orden los manda la colección "destacados" de Shopify.
+ */
+export const featuredPhotoColors: Record<string, string> = {
+  "sudadera-con-capucha-snake": "Negro",
+  "polo-pacific-women": "Blanco",
+  "sudadera-stone": "Antracita mezcla",
+  "polo-tecnico-performer-men": "Negro",
+};
 
 export interface Sector {
   name: string;
