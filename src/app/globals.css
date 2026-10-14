@@ -148,6 +148,25 @@
     line-height: 1.2;
   }
 
+  /*
+   * Menú móvil (estilo Nude Project): destinos y títulos de pantalla en
+   * tamaño enorme y peso medio, muy apretados; listas en tamaño medio.
+   */
+  .text-menu-display {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(40px, 12vw, 56px);
+    letter-spacing: -0.045em;
+    line-height: 1.05;
+  }
+
+  .text-menu-item {
+    font-weight: 400;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
   /* Navbar, footer, cualquier link de navegación. */
   .text-nav {
     font-weight: 500;

@@ -33,7 +33,7 @@ export default async function Home() {
 
   return (
     <>
-      <Navbar />
+      <Navbar variant="overlay" />
       <main>
         <Hero />
         <Categories categories={categories} />

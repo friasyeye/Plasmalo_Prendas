@@ -1,32 +1,10 @@
 /**
- * Datos del "chrome" del sitio: navegación, banner superior, footer y contacto.
+ * Datos del "chrome" del sitio: banner superior, footer y contacto.
+ * (La navegación principal vive en config/navigation.ts.)
  *
  * Este archivo es la única fuente de verdad para estos datos. Los componentes
  * de src/components/layout los importan y solo se ocupan de pintarlos.
- * Cuando las categorías vengan de Shopify, se cambia la fuente aquí (o en
- * lib/shopify) sin tocar ningún componente visual.
  */
-
-export const navPrendas = [
-  "Camiseta",
-  "Polo",
-  "Sudadera",
-  "Camisa",
-  "Jersey",
-  "Chaqueta/Chaleco",
-  "Gorra/Gorro",
-];
-
-export const navMerchandising = [
-  "Bolsas",
-  "Mochilas",
-  "Libretas",
-  "Escritura",
-  "Botellas/Termo",
-  "Tazas",
-  "Lanyards",
-  "Llaveros",
-];
 
 /**
  * Dominio de producción. Base de las URLs absolutas de los metadatos
