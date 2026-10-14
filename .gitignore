@@ -54,3 +54,13 @@ temp/
 # Archivos de sistema de Windows
 desktop.ini
 Thumbs.db
+
+# Catálogo: feeds de proveedores (pesados, se descargan de su portal) y CSV generados
+catalogo/SOLOGROUP_*.csv
+catalogo/shopify_*.csv
+
+# Caché de Python (scripts del catálogo)
+__pycache__/
+
+# Originales ampliados con Upscayl: pesan decenas de MB; al repo solo va la versión optimizada
+*_upscayl*
