@@ -13,8 +13,6 @@ export interface HomeCategory {
   hoverImg?: string;
   /** Destino de la tarjeta; sin él, la tarjeta no es un enlace. */
   href?: string;
-  /** Compatibilidad temporal con la página de sector antigua (se elimina con ella). */
-  handle?: string;
 }
 
 /**
@@ -71,14 +69,14 @@ export const sectors: Sector[] = [
     slug: "constructores",
   },
   {
-    name: "Eventos & Ocio",
+    name: "Eventos & Entretenimiento",
     img: "/images/eventos.jpg",
     tagline: "Haz que cada evento deje huella",
     slug: "eventos",
   },
   {
     name: "Empresas & Oficinas",
-    img: "/images/oficina.png",
+    img: "/images/oficina.jpg",
     tagline: "Tu equipo también es parte de tu marca",
     slug: "oficinas",
   },
